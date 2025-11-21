@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portafolio profesional de Julián Alexander Juárez Alvarado - Jefe de Sistemas CEDIS Cancún 427, experto en automatización y análisis de datos">
+    <meta name="keywords" content="automatización, Python, JavaScript, análisis de datos, sistemas, warehouse management">
+    <meta name="author" content="Julián Alexander Juárez Alvarado">
+    <title>Julián Juárez | Jefe de Sistemas & Automatización</title>
+    
+    <style>
+        /* ============================================
+           VARIABLES Y RESET
+           ============================================ */
+        :root {
+            --primary-blue: #0066B3;
+            --primary-orange: #FF6600;
+            --dark-bg: #0a0e1a;
+            --darker-bg: #050810;
+            --card-bg: #131824;
+            --text-primary: #e8eaf0;
+            --text-secondary: #9ca3af;
+            --accent-gradient: linear-gradient(135deg, #0066B3 0%, #FF6600 100%);
+            --success-green: #10b981;
+            --warning-yellow: #f59e0b;
+            --danger-red: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* ============================================
+           NAVEGACIÓN
+           ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 0.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        .mobile-menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 4rem;
+            background: var(--darker-bg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 102, 179, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 102, 0, 0.15) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-subtitle {
+            color: var(--primary-orange);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        
+        .hero-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 102, 179, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 102, 179, 0.6);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--primary-blue);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+        
+        /* ============================================
+           SECTIONS GENERALES
+           ============================================ */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ============================================
+           ABOUT SECTION
+           ============================================ */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .about-text h3 {
+            color: var(--primary-orange);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        
+        .highlight-box {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary-orange);
+            margin: 2rem 0;
+        }
+        
+        .highlight-box h4 {
+            color: var(--primary-orange);
+            margin-bottom: 1rem;
+        }
+        
+        .highlight-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .highlight-box li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+        
+        .highlight-box li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--primary-blue);
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .skill-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 10px 30px rgba(0, 102, 179, 0.3);
+        }
+        
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .skill-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .skill-level {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ============================================
+           PROJECTS SECTION
+           ============================================ */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: var(--primary-blue);
+        }
+        
+        .project-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(0, 102, 179, 0.2) 0%, rgba(255, 102, 0, 0.2) 100%);
+        }
+        
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .project-subtitle {
+            color: var(--primary-orange);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .project-body {
+            padding: 2rem;
+        }
+        
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .project-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .metric {
+            background: var(--darker-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success-green);
+            display: block;
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .tag {
+            background: rgba(0, 102, 179, 0.2);
+            color: var(--primary-blue);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .project-footer {
+            padding: 1.5rem 2rem;
+            background: var(--darker-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .project-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-green);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* ============================================
+           ACHIEVEMENTS SECTION
+           ============================================ */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .achievement-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .achievement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-gradient);
+        }
+        
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .achievement-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .achievement-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 1rem 0;
+        }
+        
+        .achievement-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        /* ============================================
+           TECH STACK SECTION
+           ============================================ */
+        .tech-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .tech-category {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .tech-category h3 {
+            color: var(--primary-orange);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .tech-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .tech-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: var(--darker-bg);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-item:hover {
+            transform: translateX(5px);
+            background: rgba(0, 102, 179, 0.1);
+        }
+        
+        .tech-item-icon {
+            font-size: 1.5rem;
+        }
+        
+        .tech-item-info {
+            flex: 1;
+        }
+        
+        .tech-item-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .tech-item-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--darker-bg);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            transition: width 1s ease;
+        }
+        
+        /* ============================================
+           TIMELINE SECTION
+           ============================================ */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary-blue) 0%, var(--primary-orange) 100%);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            width: calc(50% - 30px);
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .timeline-marker {
+            width: 20px;
+            height: 20px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid var(--dark-bg);
+            z-index: 1;
+        }
+        
+        .timeline-date {
+            color: var(--primary-orange);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* ============================================
+           CONTACT SECTION
+           ============================================ */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-item:hover {
+            transform: translateX(5px);
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .contact-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+        }
+        
+        .contact-details h4 {
+            margin-bottom: 0.3rem;
+            color: var(--text-primary);
+        }
+        
+        .contact-details p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .contact-form {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: var(--darker-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 179, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        /* ============================================
+           FOOTER
+           ============================================ */
+        footer {
+            background: var(--darker-bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--primary-blue);
+            transform: translateY(-5px);
+        }
+        
+        .footer-text {
+            color: var(--text-secondary);
+            margin-top: 2rem;
+        }
+        
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 14, 26, 0.98);
+                padding: 2rem;
+                gap: 1rem;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            
+            .hero-stats {
+                gap: 2rem;
+            }
+            
+            .about-content,
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                flex-direction: row !important;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 40px;
+            }
+            
+            .timeline-marker {
+                left: 20px;
+            }
+        }
+        
+        /* ============================================
+           ANIMACIONES Y UTILIDADES
+           ============================================ */
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVEGACIÓN -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">JAJA.DEV</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#sobre-mi">Sobre Mí</a></li>
+                <li><a href="#proyectos">Proyectos</a></li>
+                <li><a href="#logros">Logros</a></li>
+                <li><a href="#tecnologias">Tecnologías</a></li>
+                <li><a href="#trayectoria">Trayectoria</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="inicio">
+        <div class="hero-content fade-in">
+            <p class="hero-subtitle">Jefe de Sistemas & Líder en Automatización</p>
+            <h1 class="hero-title">Julián Alexander Juárez Alvarado</h1>
+            <p class="hero-description">
+                Transformando operaciones logísticas mediante automatización inteligente.
+                Especialista en Python, JavaScript y análisis de datos, con enfoque en soluciones
+                empresariales que generan ROI +3,000% y ahorran cientos de horas mensuales.
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">85-90%</span>
+                    <span class="stat-label">Reducción de Tiempo</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">3,411%</span>
+                    <span class="stat-label">ROI Proyectos</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">1,000+</span>
+                    <span class="stat-label">Horas Ahorradas/Año</span>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="#proyectos" class="btn btn-primary">Ver Proyectos</a>
+                <a href="#contacto" class="btn btn-secondary">Contactar</a>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator">
+            <svg width="30" height="50" viewBox="0 0 30 50">
+                <rect x="5" y="5" width="20" height="40" rx="10" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+                <circle cx="15" cy="15" r="3" fill="rgba(255,255,255,0.5)">
+                    <animate attributeName="cy" from="15" to="30" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+    </section>
+
+    <!-- SOBRE MÍ -->
+    <section id="sobre-mi">
+        <div class="section-header">
+            <h2 class="section-title">Sobre Mí</h2>
+            <p class="section-subtitle">
+                Líder de innovación en sistemas logísticos con visión de transformación digital
+            </p>
+        </div>
+        
+        <div class="about-content">
+            <div class="about-text">
+                <h3>🚀 Filosofía de Trabajo</h3>
+                <p>
+                    Mi enfoque se centra en crear <strong>"Máquinas y sistemas al servicio de analistas"</strong>, 
+                    no analistas al servicio de máquinas. Cada solución que desarrollo está diseñada para 
+                    empoderar la toma de decisiones humanas mediante procesamiento inteligente de datos.
+                </p>
+                
+                <div class="highlight-box">
+                    <h4>💡 Principios Clave</h4>
+                    <ul>
+                        <li>Los procesos manuales de 2-3 horas pueden reducirse a 2-5 minutos</li>
+                        <li>La prevención proactiva supera la corrección reactiva</li>
+                        <li>El ROI de automatización bien diseñada excede el 3,000%</li>
+                        <li>La presentación profesional acelera la adopción organizacional</li>
+                    </ul>
+                </div>
+                
+                <h3>📍 Posición Actual</h3>
+                <p>
+                    <strong>Jefe de Sistemas</strong> en CEDIS Cancún 427 (Tiendas Chedraui S.A. de C.V.)<br>
+                    Región Sureste | Parque Logístico CaLoPark<br>
+                    Liderando la transformación digital del centro de distribución más grande del sureste mexicano.
+                </p>
+            </div>
+            
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🐍</div>
+                    <div class="skill-name">Python</div>
+                    <div class="skill-level">Experto</div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-icon">⚛️</div>
+                    <div class="skill-name">JavaScript/React</div>
+                    <div class="skill-level">Avanzado</div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-icon">🗄️</div>
+                    <div class="skill-name">IBM DB2</div>
+                    <div class="skill-level">Experto</div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-icon">📊</div>
+                    <div class="skill-name">Análisis de Datos</div>
+                    <div class="skill-level">Experto</div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-icon">🤖</div>
+                    <div class="skill-name">Automatización</div>
+                    <div class="skill-level">Experto</div>
+                </div>
+                
+                <div class="skill-card">
+                    <div class="skill-icon">📈</div>
+                    <div class="skill-name">Excel/VBA</div>
+                    <div class="skill-level">Avanzado</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROYECTOS -->
+    <section id="proyectos">
+        <div class="section-header">
+            <h2 class="section-title">Proyectos Destacados</h2>
+            <p class="section-subtitle">
+                Soluciones empresariales con impacto medible y escalable
+            </p>
+        </div>
+        
+        <div class="projects-grid">
+            <!-- Proyecto SAC -->
+            <div class="project-card">
+                <div class="project-header">
+                    <h3 class="project-title">SAC - Sistema de Automatización Completa</h3>
+                    <p class="project-subtitle">Proyecto Flagship | En Desarrollo</p>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Ecosistema completo de automatización de 5 módulos para eliminar intervención 
+                        manual en validación de plannings, con monitoreo en tiempo real, generación 
+                        automática de reportes y sistema de alertas inteligente.
+                    </p>
+                    
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <span class="metric-value">$5.1M</span>
+                            <span class="metric-label">Ahorro Anual</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">3,411%</span>
+                            <span class="metric-label">ROI</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">18</span>
+                            <span class="metric-label">Semanas</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">5</span>
+                            <span class="metric-label">Módulos</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">React</span>
+                        <span class="tag">IBM DB2</span>
+                        <span class="tag">API REST</span>
+                        <span class="tag">WebSockets</span>
+                    </div>
+                </div>
+                <div class="project-footer">
+                    <div class="project-status">
+                        <span class="status-dot"></span>
+                        En Desarrollo Activo
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sistema Validador v5.0 -->
+            <div class="project-card">
+                <div class="project-header">
+                    <h3 class="project-title">Sistema Validador v5.0</h3>
+                    <p class="project-subtitle">Dashboard React | Producción</p>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Dashboard web interactivo con React para validación de plannings con 
+                        visualizaciones profesionales, sistema de alertas por criticidad, y 
+                        generación automática de reportes Excel corporativos.
+                    </p>
+                    
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <span class="metric-value">85-90%</span>
+                            <span class="metric-label">↓ Tiempo</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">15-20</span>
+                            <span class="metric-label">Minutos/Día</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">99%+</span>
+                            <span class="metric-label">Precisión</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">50h</span>
+                            <span class="metric-label">Ahorro/Mes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-tags">
+                        <span class="tag">React 18</span>
+                        <span class="tag">TailwindCSS</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">Pandas</span>
+                        <span class="tag">openpyxl</span>
+                    </div>
+                </div>
+                <div class="project-footer">
+                    <div class="project-status">
+                        <span class="status-dot"></span>
+                        Producción
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Validación Preventiva -->
+            <div class="project-card">
+                <div class="project-header">
+                    <h3 class="project-title">Sistema de Validación Preventiva</h3>
+                    <p class="project-subtitle">Innovación | Implementado</p>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Cambio de paradigma de reactivo a preventivo: detecta problemas 5 días 
+                        antes del recibo físico mediante análisis de datos de citas de Planning, 
+                        permitiendo correcciones antes de afectar operaciones.
+                    </p>
+                    
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <span class="metric-value">5 días</span>
+                            <span class="metric-label">Anticipación</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">100%</span>
+                            <span class="metric-label">Prevención</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">$0</span>
+                            <span class="metric-label">Costo Errores</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">24/7</span>
+                            <span class="metric-label">Monitoreo</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Email Parsing</span>
+                        <span class="tag">Predictive</span>
+                        <span class="tag">Automation</span>
+                    </div>
+                </div>
+                <div class="project-footer">
+                    <div class="project-status">
+                        <span class="status-dot"></span>
+                        Operativo
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Repositorio SQL -->
+            <div class="project-card">
+                <div class="project-header">
+                    <h3 class="project-title">Repositorio Maestro de Consultas SQL</h3>
+                    <p class="project-subtitle">Estandarización | Completo</p>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Consolidación de 29 consultas individuales en 22 queries enterprise-grade 
+                        optimizadas, con documentación completa, versionamiento y mejores prácticas 
+                        para Manhattan WMS / IBM DB2.
+                    </p>
+                    
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <span class="metric-value">-24%</span>
+                            <span class="metric-label">Queries</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">90%</span>
+                            <span class="metric-label">↓ Archivos</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">80%</span>
+                            <span class="metric-label">↓ Mantto</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">100%</span>
+                            <span class="metric-label">Doc</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-tags">
+                        <span class="tag">IBM DB2</span>
+                        <span class="tag">SQL</span>
+                        <span class="tag">Documentation</span>
+                        <span class="tag">Git</span>
+                    </div>
+                </div>
+                <div class="project-footer">
+                    <div class="project-status">
+                        <span class="status-dot"></span>
+                        Implementado
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Macro Alta Usuarios -->
+            <div class="project-card">
+                <div class="project-header">
+                    <h3 class="project-title">Macro de Alta de Usuarios Manhattan</h3>
+                    <p class="project-subtitle">Automatización | Producción</p>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Script Python para automatización completa del proceso de alta de usuarios 
+                        en Manhattan WMS, con integración a AS/400, generación de reportes y 
+                        envío automático de credenciales.
+                    </p>
+                    
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <span class="metric-value">30 min</span>
+                            <span class="metric-label">→ 5 min</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">83%</span>
+                            <span class="metric-label">↓ Tiempo</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">0</span>
+                            <span class="metric-label">Errores</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">70</span>
+                            <span class="metric-label">Usuarios</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">AS/400</span>
+                        <span class="tag">ODBC</span>
+                        <span class="tag">Email</span>
+                    </div>
+                </div>
+                <div class="project-footer">
+                    <div class="project-status">
+                        <span class="status-dot"></span>
+                        Producción
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dashboard Planning -->
+            <div class="project-card">
+                <div class="project-header">
+                    <h3 class="project-title">Dashboard de Monitoreo Planning</h3>
+                    <p class="project-subtitle">Visualización | Beta</p>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Sistema de visualización en tiempo real de operaciones de planning con 
+                        métricas KPI, alertas automáticas, gráficas interactivas y reportes 
+                        ejecutivos para supervisión.
+                    </p>
+                    
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <span class="metric-value">Real-time</span>
+                            <span class="metric-label">Updates</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">20+</span>
+                            <span class="metric-label">Métricas KPI</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">24/7</span>
+                            <span class="metric-label">Disponibilidad</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">3</span>
+                            <span class="metric-label">Vistas</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">Chart.js</span>
+                        <span class="tag">FastAPI</span>
+                        <span class="tag">WebSocket</span>
+                    </div>
+                </div>
+                <div class="project-footer">
+                    <div class="project-status">
+                        <span class="status-dot"></span>
+                        Beta Testing
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOGROS -->
+    <section id="logros">
+        <div class="section-header">
+            <h2 class="section-title">Logros y Métricas de Impacto</h2>
+            <p class="section-subtitle">
+                Resultados tangibles y medibles en optimización operacional
+            </p>
+        </div>
+        
+        <div class="achievements-grid">
+            <div class="achievement-card">
+                <div class="achievement-icon">⚡</div>
+                <h3 class="achievement-title">Reducción de Tiempo</h3>
+                <div class="achievement-value">85-90%</div>
+                <p class="achievement-description">
+                    En procesos de validación: de 2-3 horas manuales a 15-20 minutos automatizados
+                </p>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">💰</div>
+                <h3 class="achievement-title">ROI Excepcional</h3>
+                <div class="achievement-value">3,411%</div>
+                <p class="achievement-description">
+                    Retorno sobre inversión del proyecto SAC con recuperación en 10 días
+                </p>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">⏰</div>
+                <h3 class="achievement-title">Tiempo Ahorrado</h3>
+                <div class="achievement-value">1,000h</div>
+                <p class="achievement-description">
+                    Más de 1,000 horas anuales liberadas para tareas estratégicas
+                </p>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🎯</div>
+                <h3 class="achievement-title">Precisión</h3>
+                <div class="achievement-value">99%+</div>
+                <p class="achievement-description">
+                    Tasa de precisión en validaciones automatizadas vs ~80% manual
+                </p>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">📊</div>
+                <h3 class="achievement-title">Ahorro Anual</h3>
+                <div class="achievement-value">$5.1M</div>
+                <p class="achievement-description">
+                    Ahorro proyectado anual mediante automatización completa (SAC)
+                </p>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🔄</div>
+                <h3 class="achievement-title">Escalabilidad</h3>
+                <div class="achievement-value">5 CEDIS</div>
+                <p class="achievement-description">
+                    Soluciones diseñadas para replicación en 5 centros de distribución
+                </p>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🚀</div>
+                <h3 class="achievement-title">Adopción</h3>
+                <div class="achievement-value">100%</div>
+                <p class="achievement-description">
+                    Tasa de adopción en equipo de sistemas y planning tras implementación
+                </p>
+            </div>
+            
+            <div class="achievement-card">
+                <div class="achievement-icon">🛡️</div>
+                <h3 class="achievement-title">Prevención</h3>
+                <div class="achievement-value">5 días</div>
+                <p class="achievement-description">
+                    Anticipación en detección de problemas con validación preventiva
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TECNOLOGÍAS -->
+    <section id="tecnologias">
+        <div class="section-header">
+            <h2 class="section-title">Stack Tecnológico</h2>
+            <p class="section-subtitle">
+                Herramientas y tecnologías dominadas para crear soluciones empresariales
+            </p>
+        </div>
+        
+        <div class="tech-categories">
+            <div class="tech-category">
+                <h3>🐍 Backend & Automatización</h3>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">Python 3.9+</div>
+                            <div class="tech-item-desc">Core de automatización y procesamiento</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">Pandas & NumPy</div>
+                            <div class="tech-item-desc">Análisis y manipulación de datos</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">FastAPI</div>
+                            <div class="tech-item-desc">APIs REST modernas y rápidas</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">SQLAlchemy</div>
+                            <div class="tech-item-desc">ORM y gestión de bases de datos</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>⚛️ Frontend & UI</h3>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">React 18</div>
+                            <div class="tech-item-desc">Dashboards interactivos modernos</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">JavaScript ES6+</div>
+                            <div class="tech-item-desc">Lógica y funcionalidad frontend</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 88%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">TailwindCSS</div>
+                            <div class="tech-item-desc">Diseño responsive y moderno</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 82%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">Chart.js / Recharts</div>
+                            <div class="tech-item-desc">Visualización de datos</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>🗄️ Bases de Datos</h3>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">IBM DB2</div>
+                            <div class="tech-item-desc">Manhattan WMS / Enterprise DB</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">SQL Avanzado</div>
+                            <div class="tech-item-desc">Queries complejas y optimización</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">SQLite</div>
+                            <div class="tech-item-desc">Bases de datos embebidas</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>📦 Herramientas & DevOps</h3>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">Git & GitHub</div>
+                            <div class="tech-item-desc">Control de versiones</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 88%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">VS Code + Claude Dev</div>
+                            <div class="tech-item-desc">Desarrollo asistido por IA</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width">90%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">Excel/VBA</div>
+                            <div class="tech-item-desc">Macros y automatización Office</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">DBeaver</div>
+                            <div class="tech-item-desc">Administración de BD</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 88%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>🎯 Sistemas Empresariales</h3>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">Manhattan WMS</div>
+                            <div class="tech-item-desc">Warehouse Management System</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">AS/400 / IBM i</div>
+                            <div class="tech-item-desc">Sistemas legacy empresariales</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">Office 365</div>
+                            <div class="tech-item-desc">Automatización y integraciones</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tech-category">
+                <h3>📊 Análisis & Reportes</h3>
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">openpyxl / XlsxWriter</div>
+                            <div class="tech-item-desc">Generación de reportes Excel</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">Matplotlib / Plotly</div>
+                            <div class="tech-item-desc">Visualización de datos</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-item">
+                        <div class="tech-item-icon">🔹</div>
+                        <div class="tech-item-info">
+                            <div class="tech-item-name">ReportLab</div>
+                            <div class="tech-item-desc">Generación de PDFs</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 78%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRAYECTORIA -->
+    <section id="trayectoria">
+        <div class="section-header">
+            <h2 class="section-title">Trayectoria e Hitos</h2>
+            <p class="section-subtitle">
+                Evolución de sistemas manuales a automatización enterprise-grade
+            </p>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2020 - 2021</div>
+                    <h3 class="timeline-title">Fase Manual: Identificación del Problema</h3>
+                    <p class="timeline-description">
+                        Proceso completamente manual: 2-3 horas diarias copiando/pegando datos 
+                        de Excel, ejecutando queries en WinSQL, sin trazabilidad ni control de errores. 
+                        Identificación de la necesidad crítica de automatización.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2022</div>
+                    <h3 class="timeline-title">Fase Excel/VBA: Primera Automatización</h3>
+                    <p class="timeline-description">
+                        Desarrollo de macros Excel con VBA para automatización parcial. 
+                        Reducción a 1.5-2 horas diarias (~30-40% mejora). Primer contacto con 
+                        programación y bases de datos. Limitaciones de Excel evidenciadas.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2023 (Q1-Q2)</div>
+                    <h3 class="timeline-title">Fase Python Básico: Migración Tecnológica</h3>
+                    <p class="timeline-description">
+                        Migración de VBA a Python con scripts básicos. Conexión directa a DB2. 
+                        Reducción a 1 hora diaria (~60% mejora total). Introducción a pandas 
+                        para procesamiento de datos.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2023 (Q3-Q4)</div>
+                    <h3 class="timeline-title">Fase Python Avanzado: Sistema Robusto</h3>
+                    <p class="timeline-description">
+                        Scripts Python avanzados con manejo de errores, logging, sistema de alertas. 
+                        Generación automática de reportes Excel. Reducción a 45 minutos diarios 
+                        (~75% mejora total). ROI demostrable.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2024 (Q3-Q4)</div>
+                    <h3 class="timeline-title">Sistema Validador v5.0: Dashboard React</h3>
+                    <p class="timeline-description">
+                        Salto cualitativo: Dashboard web profesional con React, visualizaciones 
+                        interactivas, sistema de colores por criticidad. Reducción a 15-20 minutos 
+                        diarios (85-90% mejora). Precisión 99%+. Proof of concept SAC completo.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2024 (Nov)</div>
+                    <h3 class="timeline-title">Validación Preventiva: Cambio de Paradigma</h3>
+                    <p class="timeline-description">
+                        Implementación de sistema preventivo: detección de problemas 5 días antes 
+                        mediante análisis de datos de citas. Paso de corrección reactiva a 
+                        prevención proactiva. Costo de errores → $0.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2025 (Actual)</div>
+                    <h3 class="timeline-title">Proyecto SAC: Automatización Completa</h3>
+                    <p class="timeline-description">
+                        Desarrollo de ecosistema completo de 5 módulos con eliminación total de 
+                        intervención manual. ROI proyectado 3,411%. Preparación para escalamiento 
+                        a 5 CEDIS regionales. Posicionamiento como líder en innovación de sistemas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto">
+        <div class="section-header">
+            <h2 class="section-title">Conectemos</h2>
+            <p class="section-subtitle">
+                ¿Proyecto de automatización? ¿Consultoría en sistemas? Hablemos.
+            </p>
+        </div>
+        
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-details">
+                        <h4>Email Corporativo</h4>
+                        <p>sistemas.cedis427@chedraui.com.mx</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <div class="contact-details">
+                        <h4>Ubicación</h4>
+                        <p>CEDIS Cancún 427 - Parque Logístico CaLoPark<br>
+                        Carretera Cancún-Puerto Morelos<br>
+                        Quintana Roo, México</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">🏢</div>
+                    <div class="contact-details">
+                        <h4>Organización</h4>
+                        <p>Tiendas Chedraui S.A. de C.V.<br>
+                        Región Sureste</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">💼</div>
+                    <div class="contact-details">
+                        <h4>Posición</h4>
+                        <p>Jefe de Sistemas<br>
+                        Especialista en Automatización y Análisis</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input type="text" id="name" name="name" required placeholder="Tu nombre completo">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Asunto</label>
+                        <input type="text" id="subject" name="subject" required placeholder="¿En qué puedo ayudarte?">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Mensaje</label>
+                        <textarea id="message" name="message" required placeholder="Cuéntame sobre tu proyecto o consulta..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Enviar Mensaje
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="font-size: 2rem; margin-bottom: 1rem;">JAJA.DEV</div>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Transformando operaciones mediante automatización inteligente
+            </p>
+            
+            <div class="social-links">
+                <a href="#" class="social-link" aria-label="LinkedIn">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-link" aria-label="GitHub">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-link" aria-label="Email">
+                    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="footer-text">
+                <p>&copy; 2025 Julián Alexander Juárez Alvarado. Todos los derechos reservados.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                    Desarrollado con ❤️ usando HTML5, CSS3, JavaScript puro y Python
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ============================================
+        // NAVEGACIÓN
+        // ============================================
+        const navbar = document.getElementById('navbar');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        // Scroll effect en navbar
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobile menu toggle
+        mobileMenuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Cerrar menu mobile al hacer click en link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // ============================================
+        // ANIMACIÓN DE NÚMEROS (Counter)
+        // ============================================
+        const animateCounters = () => {
+            const counters = document.querySelectorAll('.stat-number, .metric-value, .achievement-value');
+            
+            counters.forEach(counter => {
+                const target = counter.textContent;
+                
+                // Solo animar números
+                if (!/\d/.test(target)) return;
+                
+                const updateCount = () => {
+                    const count = parseInt(counter.textContent.replace(/[^0-9]/g, ''));
+                    const targetNum = parseInt(target.replace(/[^0-9]/g, ''));
+                    const increment = targetNum / 50;
+                    
+                    if (count < targetNum) {
+                        const newCount = Math.ceil(count + increment);
+                        counter.textContent = target.replace(/\d+/, newCount);
+                        setTimeout(updateCount, 30);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+                
+                // Iniciar animación cuando el elemento es visible
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateCount();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                observer.observe(counter);
+            });
+        };
+        
+        // ============================================
+        // ANIMACIÓN DE BARRAS DE PROGRESO
+        // ============================================
+        const animateProgressBars = () => {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.width = entry.target.style.width || '0%';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            progressBars.forEach(bar => observer.observe(bar));
+        };
+        
+        // ============================================
+        // FADE IN ANIMATION
+        // ============================================
+        const fadeInElements = () => {
+            const elements = document.querySelectorAll('section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            elements.forEach(element => observer.observe(element));
+        };
+        
+        // ============================================
+        // FORM SUBMISSION
+        // ============================================
+        const contactForm = document.getElementById('contactForm');
+        
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData);
+            
+            // Aquí irá la lógica de envío real
+            console.log('Form submitted:', data);
+            
+            // Mostrar mensaje de éxito
+            alert('¡Mensaje enviado! Te contactaré pronto.');
+            contactForm.reset();
+        });
+        
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            animateCounters();
+            animateProgressBars();
+            fadeInElements();
+            
+            // Log de inicialización
+            console.log('%c🚀 Portafolio Cargado', 'color: #0066B3; font-size: 20px; font-weight: bold;');
+            console.log('%cJulián Alexander Juárez Alvarado', 'color: #FF6600; font-size: 16px;');
+            console.log('%cJefe de Sistemas | Experto en Automatización', 'color: #9ca3af; font-size: 14px;');
+        });
+        
+        // ============================================
+        // EASTER EGG: Konami Code
+        // ============================================
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            konamiCode = konamiCode.slice(-10);
+            
+            if (konamiCode.join('') === konamiSequence.join('')) {
+                console.log('%c🎮 Konami Code Activado! 🎮', 'color: #10b981; font-size: 24px; font-weight: bold;');
+                console.log('%c"La automatización es el arte de hacer que las máquinas trabajen para nosotros, no nosotros para las máquinas."', 'color: #0066B3; font-size: 14px; font-style: italic;');
+                document.body.style.animation = 'rainbow 3s linear infinite';
+            }
+        });
+    </script>
+</body>
+</html>

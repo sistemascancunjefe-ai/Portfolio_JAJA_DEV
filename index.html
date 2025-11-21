@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio Julián Juárez - Índice de Archivos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #131824 100%);
+            color: #e8eaf0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(19, 24, 36, 0.8);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            background: linear-gradient(135deg, #0066B3 0%, #FF6600 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .file-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .file-card {
+            background: #0a0e1a;
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 102, 179, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-5px);
+            border-color: #0066B3;
+            box-shadow: 0 10px 30px rgba(0, 102, 179, 0.3);
+        }
+        
+        .file-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .file-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #FF6600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-description {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .file-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .file-size {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #0066B3 0%, #FF6600 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 179, 0.4);
+        }
+        
+        .instructions {
+            background: rgba(0, 102, 179, 0.1);
+            border-left: 4px solid #0066B3;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 3rem;
+        }
+        
+        .instructions h2 {
+            color: #FF6600;
+            margin-bottom: 1rem;
+        }
+        
+        .instructions ol {
+            color: #9ca3af;
+            padding-left: 1.5rem;
+            line-height: 2;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .tech-badge {
+            background: rgba(0, 102, 179, 0.2);
+            color: #0066B3;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Portafolio Profesional</h1>
+        <p class="subtitle">Julián Alexander Juárez Alvarado | Jefe de Sistemas & Automatización</p>
+        
+        <div class="file-grid">
+            <!-- Archivo 1: Portafolio HTML -->
+            <div class="file-card" onclick="window.location.href='portfolio_julian_juarez.html'">
+                <div class="file-icon">🌐</div>
+                <h3 class="file-title">Portafolio Web Principal</h3>
+                <p class="file-description">
+                    Página web completa con diseño moderno, responsive y profesional. Incluye todas las 
+                    secciones: proyectos, logros, tecnologías, trayectoria y contacto. Compatible con 
+                    todos los navegadores modernos.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge">HTML5</span>
+                    <span class="tech-badge">CSS3</span>
+                    <span class="tech-badge">JavaScript</span>
+                    <span class="tech-badge">Responsive</span>
+                </div>
+                <div class="file-meta">
+                    <span class="file-size">📄 ~81 KB</span>
+                    <a href="portfolio_julian_juarez.html" class="btn">Abrir Portafolio</a>
+                </div>
+            </div>
+            
+            <!-- Archivo 2: Ejemplo Python -->
+            <div class="file-card">
+                <div class="file-icon">🐍</div>
+                <h3 class="file-title">Ejemplo de Código Python</h3>
+                <p class="file-description">
+                    Sistema completo de validación automatizada de plannings. Demuestra conexión a DB2, 
+                    procesamiento con Pandas, generación de reportes Excel y sistema de alertas por 
+                    criticidad. Código producción-ready con logging profesional.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Python 3.9+</span>
+                    <span class="tech-badge">Pandas</span>
+                    <span class="tech-badge">IBM DB2</span>
+                    <span class="tech-badge">openpyxl</span>
+                </div>
+                <div class="file-meta">
+                    <span class="file-size">🐍 ~15 KB | 430 líneas</span>
+                    <a href="ejemplo_validador_planning.py" download class="btn">Descargar Código</a>
+                </div>
+            </div>
+            
+            <!-- Archivo 3: README -->
+            <div class="file-card">
+                <div class="file-icon">📚</div>
+                <h3 class="file-title">Documentación Completa</h3>
+                <p class="file-description">
+                    README detallado con instrucciones de instalación, uso, personalización y 
+                    troubleshooting. Incluye métricas de impacto, tecnologías utilizadas y guía de 
+                    publicación en GitHub Pages.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Markdown</span>
+                    <span class="tech-badge">Guía de Uso</span>
+                    <span class="tech-badge">Documentación</span>
+                </div>
+                <div class="file-meta">
+                    <span class="file-size">📖 ~10 KB</span>
+                    <a href="README.md" download class="btn">Ver README</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instrucciones -->
+        <div class="instructions">
+            <h2>📥 Instrucciones de Descarga y Uso</h2>
+            <ol>
+                <li><strong>Descargar archivos</strong>: Haz clic en los botones de cada tarjeta para descargar</li>
+                <li><strong>Abrir portafolio</strong>: Haz doble clic en <code>portfolio_julian_juarez.html</code></li>
+                <li><strong>Ejecutar código Python</strong>:
+                    <ul style="list-style: none; padding-left: 1rem; margin-top: 0.5rem;">
+                        <li>• Instala dependencias: <code>pip install pandas pyodbc openpyxl</code></li>
+                        <li>• Configura credenciales en el archivo</li>
+                        <li>• Ejecuta: <code>python ejemplo_validador_planning.py</code></li>
+                    </ul>
+                </li>
+                <li><strong>Leer documentación</strong>: Abre <code>README.md</code> en cualquier editor de texto</li>
+                <li><strong>Personalizar</strong>: Edita los archivos HTML según tus necesidades</li>
+            </ol>
+        </div>
+        
+        <!-- Métricas de Impacto -->
+        <div class="instructions" style="background: rgba(255, 102, 0, 0.1); border-color: #FF6600;">
+            <h2>📊 Métricas de Impacto de Proyectos</h2>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 0.5rem 0;">⚡ <strong>Reducción de Tiempo:</strong> 85-90% (de 2-3h a 15-20min)</li>
+                <li style="padding: 0.5rem 0;">💰 <strong>ROI:</strong> 3,411% (Proyecto SAC)</li>
+                <li style="padding: 0.5rem 0;">⏰ <strong>Ahorro Anual:</strong> 1,000+ horas por analista</li>
+                <li style="padding: 0.5rem 0;">🎯 <strong>Precisión:</strong> 99%+ (vs ~80% manual)</li>
+                <li style="padding: 0.5rem 0;">💵 <strong>Ahorro Económico:</strong> $5.1M MXN anuales proyectados</li>
+                <li style="padding: 0.5rem 0;">🔄 <strong>Escalabilidad:</strong> Replicable en 5 CEDIS regionales</li>
+            </ul>
+        </div>
+        
+        <footer>
+            <p><strong>Julián Alexander Juárez Alvarado</strong></p>
+            <p style="margin-top: 0.5rem;">Jefe de Sistemas | CEDIS Cancún 427 | Tiendas Chedraui S.A. de C.V.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                Desarrollado con ❤️ usando HTML5, CSS3, JavaScript y Python
+            </p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.7;">
+                © 2025 Todos los derechos reservados
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
