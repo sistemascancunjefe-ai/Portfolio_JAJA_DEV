@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julián Alexander Juárez Alvarado | Systems Architect & Red Team Operative</title>
+    <style>
+        :root {
+            --corp-primary: #0066B3;
+            --corp-secondary: #00D9A3;
+            --corp-accent: #4A90E2;
+            --corp-bg: #FFFFFF;
+            --corp-bg-alt: #F8F9FA;
+            --corp-text: #2C3E50;
+            --corp-text-light: #6C757D;
+            --corp-border: #E1E8ED;
+            --red-primary: #00ff41;
+            --red-danger: #ff0040;
+            --red-warning: #ff6600;
+            --red-accent: #00d9ff;
+            --red-bg: #0a0e1a;
+            --red-bg-alt: #131824;
+            --red-text: #e8eaf0;
+            --transition-speed: 0.5s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--corp-bg);
+            color: var(--corp-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background var(--transition-speed), color var(--transition-speed);
+        }
+        
+        body.dark-mode {
+            background: var(--red-bg);
+            color: var(--red-text);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 65, 0.03) 2px, rgba(0, 255, 65, 0.03) 4px);
+        }
+        
+        body.dark-mode .scanlines {
+            display: block;
+        }
+        
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        
+        body.dark-mode #matrix-canvas {
+            opacity: 0.08;
+        }
+        
+        .navbar-corporate {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 1px solid var(--corp-border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-speed);
+        }
+        
+        body.dark-mode .navbar-corporate {
+            background: rgba(19, 24, 36, 0.98);
+            border-bottom-color: var(--red-primary);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-corporate {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--corp-primary);
+            transition: color var(--transition-speed);
+            cursor: pointer;
+        }
+        
+        body.dark-mode .logo-corporate {
+            color: var(--red-primary);
+            text-shadow: 0 0 10px var(--red-primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--corp-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--corp-primary);
+        }
+        
+        body.dark-mode .nav-links a {
+            color: var(--red-text);
+        }
+        
+        body.dark-mode .nav-links a:hover {
+            color: var(--red-primary);
+            text-shadow: 0 0 10px var(--red-primary);
+        }
+        
+        .hero-corporate {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        
+        .hero-content-corp {
+            max-width: 1400px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-text-corp h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            color: var(--corp-primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle-corp {
+            font-size: 1.5rem;
+            color: var(--corp-accent);
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+        
+        .hero-description-corp {
+            font-size: 1.1rem;
+            color: var(--corp-text-light);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-grid-corp {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .stat-card-corp {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--corp-border);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card-corp:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number-corp {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--corp-primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label-corp {
+            color: var(--corp-text-light);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .profile-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--corp-border);
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--corp-border);
+        }
+        
+        .profile-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--corp-primary), var(--corp-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 3rem;
+            color: white;
+        }
+        
+        .profile-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--corp-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-company {
+            color: var(--corp-text-light);
+            font-size: 1rem;
+        }
+        
+        .certifications {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .cert-badge {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--corp-bg-alt);
+            border-radius: 10px;
+            border-left: 4px solid var(--corp-primary);
+        }
+        
+        .cert-icon {
+            font-size: 2rem;
+        }
+        
+        .cert-text {
+            flex: 1;
+        }
+        
+        .cert-name {
+            font-weight: 600;
+            color: var(--corp-text);
+            display: block;
+        }
+        
+        .cert-issuer {
+            font-size: 0.9rem;
+            color: var(--corp-text-light);
+        }
+        
+        .btn-corp {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary-corp {
+            background: var(--corp-primary);
+            color: white;
+            border: 2px solid var(--corp-primary);
+        }
+        
+        .btn-primary-corp:hover {
+            background: transparent;
+            color: var(--corp-primary);
+        }
+        
+        .btn-secondary-corp {
+            background: transparent;
+            color: var(--corp-primary);
+            border: 2px solid var(--corp-primary);
+        }
+        
+        .btn-secondary-corp:hover {
+            background: var(--corp-primary);
+            color: white;
+        }
+        
+        .cta-buttons-corp {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header-corp {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title-corp {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--corp-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle-corp {
+            font-size: 1.2rem;
+            color: var(--corp-text-light);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .stack-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stack-category {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--corp-border);
+        }
+        
+        .stack-category h3 {
+            color: var(--corp-primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .stack-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .stack-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.8rem;
+            background: var(--corp-bg-alt);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .stack-item:hover {
+            background: var(--corp-primary);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .stack-item-name {
+            font-weight: 600;
+        }
+        
+        .stack-item-level {
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            background: var(--corp-primary);
+            color: white;
+            border-radius: 20px;
+        }
+        
+        .stack-item:hover .stack-item-level {
+            background: white;
+            color: var(--corp-primary);
+        }
+        
+        .projects-grid-corp {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card-corp {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--corp-border);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .project-card-corp:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 40px rgba(0, 102, 179, 0.15);
+        }
+        
+        .project-image-corp {
+            height: 200px;
+            background: linear-gradient(135deg, var(--corp-primary), var(--corp-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+        }
+        
+        .project-content-corp {
+            padding: 2rem;
+        }
+        
+        .project-title-corp {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--corp-text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-subtitle-corp {
+            color: var(--corp-text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .project-description-corp {
+            color: var(--corp-text);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .project-metrics-corp {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .metric-corp {
+            text-align: center;
+            padding: 1rem;
+            background: var(--corp-bg-alt);
+            border-radius: 8px;
+        }
+        
+        .metric-value-corp {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--corp-primary);
+            display: block;
+        }
+        
+        .metric-label-corp {
+            font-size: 0.8rem;
+            color: var(--corp-text-light);
+            text-transform: uppercase;
+        }
+        
+        .project-tags-corp {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tag-corp {
+            padding: 0.4rem 1rem;
+            background: var(--corp-bg-alt);
+            color: var(--corp-primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .transition-zone {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #0a0e1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glitch-container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .glitch-title {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--corp-primary);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .glitch-title.active {
+            animation: glitch 0.3s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+        
+        .glitch-title.active::before,
+        .glitch-title.active::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch-title.active::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff0040;
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+        
+        .glitch-title.active::after {
+            left: -2px;
+            text-shadow: -2px 0 #00ffff;
+            animation: glitch-anim 3s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip-path: inset(10% 0 70% 0); }
+            25% { clip-path: inset(40% 0 40% 0); }
+            50% { clip-path: inset(20% 0 60% 0); }
+            75% { clip-path: inset(60% 0 20% 0); }
+            100% { clip-path: inset(30% 0 50% 0); }
+        }
+        
+        .warning-box {
+            background: rgba(255, 0, 64, 0.1);
+            border: 3px solid var(--red-danger);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            animation: blink 2s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .warning-text {
+            color: var(--red-danger);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        
+        .warning-message {
+            color: #6C757D;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .continue-btn {
+            padding: 1rem 3rem;
+            background: transparent;
+            border: 2px solid var(--red-danger);
+            color: var(--red-danger);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .continue-btn:hover {
+            background: var(--red-danger);
+            color: white;
+        }
+        
+        .red-team-section {
+            background: var(--red-bg);
+            color: var(--red-text);
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            padding: 8rem 2rem 4rem;
+        }
+        
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 26, 0.98);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-overlay.active {
+            display: flex;
+        }
+        
+        .auth-box {
+            background: var(--red-bg-alt);
+            border: 2px solid var(--red-primary);
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 50px var(--red-primary);
+        }
+        
+        .auth-title {
+            color: var(--red-primary);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px var(--red-primary);
+        }
+        
+        .auth-input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-label {
+            color: var(--red-accent);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .auth-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--red-bg);
+            border: 1px solid var(--red-primary);
+            color: var(--red-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+        }
+        
+        .auth-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--red-primary);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid var(--red-primary);
+            color: var(--red-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-btn:hover {
+            background: var(--red-primary);
+            color: var(--red-bg);
+        }
+        
+        .auth-attempts {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--red-warning);
+            font-size: 0.9rem;
+        }
+        
+        .terminal-window {
+            background: var(--red-bg-alt);
+            border: 2px solid var(--red-primary);
+            border-radius: 5px;
+            margin: 2rem 0;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+        
+        .terminal-header {
+            background: var(--red-bg);
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--red-primary);
+        }
+        
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .terminal-btn-close { background: #ff0040; }
+        .terminal-btn-minimize { background: #ff6600; }
+        .terminal-btn-maximize { background: #00ff41; }
+        
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            color: var(--red-accent);
+            font-size: 0.9rem;
+        }
+        
+        .terminal-body {
+            padding: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .terminal-prompt {
+            color: var(--red-accent);
+        }
+        
+        .terminal-command {
+            color: var(--red-primary);
+        }
+        
+        .terminal-output {
+            color: #9ca3af;
+        }
+        
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--red-primary);
+            animation: blink-cursor 0.7s infinite;
+        }
+        
+        @keyframes blink-cursor {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .projects-grid-red {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .project-card-red {
+            background: var(--red-bg-alt);
+            border: 2px solid var(--red-primary);
+            border-radius: 10px;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .project-card-red:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .project-clearance {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        
+        .project-clearance.green {
+            background: var(--red-primary);
+            color: var(--red-bg);
+        }
+        
+        .project-clearance.red {
+            background: var(--red-danger);
+            color: white;
+        }
+        
+        .project-clearance.yellow {
+            background: var(--red-warning);
+            color: var(--red-bg);
+        }
+        
+        .project-card-red h3 {
+            color: var(--red-primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-card-red p {
+            color: var(--red-text);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .classified-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            font-size: 4rem;
+            color: var(--red-danger);
+            opacity: 0.1;
+            font-weight: 900;
+            pointer-events: none;
+        }
+        
+        .project-card-ultra-classified {
+            filter: blur(2px);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .project-card-ultra-classified::before {
+            content: '[ LEVEL 6 - ULTRA CLASSIFIED ]';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            font-size: 1.5rem;
+            color: var(--red-danger);
+            font-weight: 900;
+            z-index: 10;
+            text-shadow: 0 0 20px var(--red-danger);
+        }
+        
+        .alert-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 9000;
+            max-width: 400px;
+        }
+        
+        .alert {
+            background: var(--red-bg-alt);
+            border: 2px solid;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            animation: slideInRight 0.5s ease;
+            box-shadow: 0 0 20px;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .alert.success {
+            border-color: var(--red-primary);
+            box-shadow: 0 0 20px var(--red-primary);
+            color: var(--red-primary);
+        }
+        
+        .alert.warning {
+            border-color: var(--red-warning);
+            box-shadow: 0 0 20px var(--red-warning);
+            color: var(--red-warning);
+        }
+        
+        .alert.danger {
+            border-color: var(--red-danger);
+            box-shadow: 0 0 20px var(--red-danger);
+            color: var(--red-danger);
+        }
+        
+        .ip-tracker {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(19, 24, 36, 0.95);
+            border: 2px solid var(--red-danger);
+            padding: 1rem;
+            font-size: 0.85rem;
+            z-index: 9000;
+            box-shadow: 0 0 20px var(--red-danger);
+            display: none;
+        }
+        
+        .ip-tracker.active {
+            display: block;
+            animation: slideInRight 0.5s ease;
+        }
+        
+        .ip-tracker-title {
+            color: var(--red-danger);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .ip-tracker-data {
+            color: var(--red-primary);
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 1024px) {
+            .hero-content-corp {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid-corp {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .glitch-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <canvas id="matrix-canvas"></canvas>
+    <div class="alert-container" id="alertContainer"></div>
+    <div class="ip-tracker" id="ipTracker">
+        <div class="ip-tracker-title">⚠ UNAUTHORIZED ACCESS DETECTED</div>
+        <div class="ip-tracker-data" id="ipTrackerData"></div>
+    </div>
+    
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-box">
+            <div class="auth-title">[ AUTHENTICATION REQUIRED ]</div>
+            <div class="auth-input-group">
+                <label class="auth-label" for="passwordInput">PASSWORD:</label>
+                <input type="password" id="passwordInput" class="auth-input" placeholder="Enter access code..." autocomplete="off">
+            </div>
+            <button class="auth-btn" onclick="authenticate()">[ AUTENTICAR ]</button>
+            <div class="auth-attempts" id="authAttempts">Intentos restantes: 3</div>
+        </div>
+    </div>
+    
+    <nav class="navbar-corporate" id="navbar">
+        <div class="nav-container">
+            <div class="logo-corporate" id="logo" onclick="logoClickCount++">JAJA | Systems Architect</div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#stack">Stack Técnico</a></li>
+                <li><a href="#proyectos">Proyectos</a></li>
+                <li><a href="#transicion">...</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <section class="hero-corporate" id="inicio">
+        <div class="hero-content-corp">
+            <div class="hero-text-corp">
+                <h1>Julián Alexander Juárez Alvarado</h1>
+                <p class="hero-subtitle-corp">Jefe de Sistemas | Especialista en Automatización</p>
+                <p class="hero-description-corp">
+                    Líder en transformación digital y automatización enterprise. Especializado en 
+                    resolver conflictos tecnológicos mediante soluciones inteligentes e integrales. 
+                    Experiencia comprobada en reducción de tiempos operacionales del 85-90% y 
+                    generación de ROI superiores al 3,000%.
+                </p>
+                
+                <div class="stats-grid-corp">
+                    <div class="stat-card-corp">
+                        <span class="stat-number-corp">85-90%</span>
+                        <span class="stat-label-corp">Reducción de Tiempo</span>
+                    </div>
+                    <div class="stat-card-corp">
+                        <span class="stat-number-corp">$5.1M</span>
+                        <span class="stat-label-corp">Ahorro Anual</span>
+                    </div>
+                    <div class="stat-card-corp">
+                        <span class="stat-number-corp">3,411%</span>
+                        <span class="stat-label-corp">ROI Proyectos</span>
+                    </div>
+                </div>
+                
+                <div class="cta-buttons-corp">
+                    <a href="#proyectos" class="btn-corp btn-primary-corp">Ver Proyectos</a>
+                    <a href="#stack" class="btn-corp btn-secondary-corp">Stack Técnico</a>
+                </div>
+            </div>
+            
+            <div class="hero-image-corp">
+                <div class="profile-box">
+                    <div class="profile-header">
+                        <div class="profile-icon">👨‍💻</div>
+                        <div class="profile-title">Jefe de Sistemas</div>
+                        <div class="profile-company">CEDIS Cancún 427</div>
+                    </div>
+                    
+                    <div class="certifications">
+                        <div class="cert-badge">
+                            <div class="cert-icon">🎓</div>
+                            <div class="cert-text">
+                                <span class="cert-name">Ingeniería en Tecnologías Computacionales</span>
+                                <span class="cert-issuer">En curso</span>
+                            </div>
+                        </div>
+                        
+                        <div class="cert-badge">
+                            <div class="cert-icon">🏆</div>
+                            <div class="cert-text">
+                                <span class="cert-name">CATALYST Operations Platform</span>
+                                <span class="cert-issuer">Arquitecto Principal</span>
+                            </div>
+                        </div>
+                        
+                        <div class="cert-badge">
+                            <div class="cert-icon">⚡</div>
+                            <div class="cert-text">
+                                <span class="cert-name">Manhattan WMS Expert</span>
+                                <span class="cert-issuer">Certificación Enterprise</span>
+                            </div>
+                        </div>
+                        
+                        <div class="cert-badge">
+                            <div class="cert-icon">📊</div>
+                            <div class="cert-text">
+                                <span class="cert-name">Big Data Analysis</span>
+                                <span class="cert-issuer">Specialization</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="stack">
+        <div class="section-header-corp">
+            <h2 class="section-title-corp">Stack Técnico Completo</h2>
+            <p class="section-subtitle-corp">
+                Conocimientos y herramientas para crear soluciones integrales de automatización
+            </p>
+        </div>
+        
+        <div class="stack-categories">
+            <div class="stack-category">
+                <h3>⟨⟩ Lenguajes de Programación</h3>
+                <div class="stack-items">
+                    <div class="stack-item">
+                        <span class="stack-item-name">Python 3.9+</span>
+                        <span class="stack-item-level">Experto</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">JavaScript ES6+</span>
+                        <span class="stack-item-level">Avanzado</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">SQL</span>
+                        <span class="stack-item-level">Experto</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">HTML/CSS</span>
+                        <span class="stack-item-level">Avanzado</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stack-category">
+                <h3>⚛️ Frameworks & Libraries</h3>
+                <div class="stack-items">
+                    <div class="stack-item">
+                        <span class="stack-item-name">FastAPI</span>
+                        <span class="stack-item-level">Backend APIs</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">React 18</span>
+                        <span class="stack-item-level">Frontend</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">Pandas & NumPy</span>
+                        <span class="stack-item-level">Data Processing</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">SQLAlchemy</span>
+                        <span class="stack-item-level">ORM</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stack-category">
+                <h3>🗄️ Bases de Datos</h3>
+                <div class="stack-items">
+                    <div class="stack-item">
+                        <span class="stack-item-name">IBM DB2</span>
+                        <span class="stack-item-level">Experto</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">SQL Server</span>
+                        <span class="stack-item-level">Avanzado</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">SQLite</span>
+                        <span class="stack-item-level">Avanzado</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">PostgreSQL</span>
+                        <span class="stack-item-level">Intermedio</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stack-category">
+                <h3>🏢 Sistemas Enterprise</h3>
+                <div class="stack-items">
+                    <div class="stack-item">
+                        <span class="stack-item-name">Manhattan WMS</span>
+                        <span class="stack-item-level">Experto</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">AS/400 / IBM i</span>
+                        <span class="stack-item-level">Avanzado</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">Office 365</span>
+                        <span class="stack-item-level">Avanzado</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stack-category">
+                <h3>🔧 DevOps & Tools</h3>
+                <div class="stack-items">
+                    <div class="stack-item">
+                        <span class="stack-item-name">Git & GitHub</span>
+                        <span class="stack-item-level">Avanzado</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">Docker</span>
+                        <span class="stack-item-level">Intermedio</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">VS Code + Claude Dev</span>
+                        <span class="stack-item-level">Avanzado</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">DBeaver</span>
+                        <span class="stack-item-level">Experto</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stack-category">
+                <h3>📚 Capacidades para Crear Apps</h3>
+                <div class="stack-items">
+                    <div class="stack-item">
+                        <span class="stack-item-name">Web Development</span>
+                        <span class="stack-item-level">Full Stack</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">RESTful APIs</span>
+                        <span class="stack-item-level">Design & Impl</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">Database Design</span>
+                        <span class="stack-item-level">Relational</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">Authentication Systems</span>
+                        <span class="stack-item-level">JWT, OAuth</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">Real-time Communication</span>
+                        <span class="stack-item-level">WebSockets</span>
+                    </div>
+                    <div class="stack-item">
+                        <span class="stack-item-name">Data Visualization</span>
+                        <span class="stack-item-level">Dashboards</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="proyectos">
+        <div class="section-header-corp">
+            <h2 class="section-title-corp">Proyectos Enterprise</h2>
+            <p class="section-subtitle-corp">
+                Soluciones implementadas con impacto medible en operaciones
+            </p>
+        </div>
+        
+        <div class="projects-grid-corp">
+            <div class="project-card-corp">
+                <div class="project-image-corp">🚀</div>
+                <div class="project-content-corp">
+                    <h3 class="project-title-corp">CATALYST Core</h3>
+                    <p class="project-subtitle-corp">Sistema de Automatización Completa</p>
+                    <p class="project-description-corp">
+                        Plataforma central de automatización para operaciones de warehouse.
+                        Integra validación preventiva, monitoreo en tiempo real y 
+                        reconciliación automática de órdenes de compra.
+                    </p>
+                    <div class="project-metrics-corp">
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">$5.1M</span>
+                            <span class="metric-label-corp">Ahorro Anual</span>
+                        </div>
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">3,411%</span>
+                            <span class="metric-label-corp">ROI</span>
+                        </div>
+                    </div>
+                    <div class="project-tags-corp">
+                        <span class="tag-corp">Python</span>
+                        <span class="tag-corp">IBM DB2</span>
+                        <span class="tag-corp">FastAPI</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-card-corp">
+                <div class="project-image-corp">⚡</div>
+                <div class="project-content-corp">
+                    <h3 class="project-title-corp">Sistema Validador v5.0</h3>
+                    <p class="project-subtitle-corp">Validación de Estados Manhattan</p>
+                    <p class="project-description-corp">
+                        Sistema de validación automatizada que reduce el tiempo de procesamiento
+                        de 2 horas a 15-20 minutos. Genera reportes ejecutivos y detecta
+                        inconsistencias críticas.
+                    </p>
+                    <div class="project-metrics-corp">
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">85-90%</span>
+                            <span class="metric-label-corp">Reducción Tiempo</span>
+                        </div>
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">99%+</span>
+                            <span class="metric-label-corp">Precisión</span>
+                        </div>
+                    </div>
+                    <div class="project-tags-corp">
+                        <span class="tag-corp">Python</span>
+                        <span class="tag-corp">Pandas</span>
+                        <span class="tag-corp">Reporting</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-card-corp">
+                <div class="project-image-corp">🔍</div>
+                <div class="project-content-corp">
+                    <h3 class="project-title-corp">Validación Preventiva</h3>
+                    <p class="project-subtitle-corp">Early Warning System</p>
+                    <p class="project-description-corp">
+                        Sistema de detección temprana que identifica problemas potenciales
+                        5 días antes de que ocurran. Monitoreo proactivo de interfaces y
+                        validación de integridad de datos.
+                    </p>
+                    <div class="project-metrics-corp">
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">5 días</span>
+                            <span class="metric-label-corp">Anticipación</span>
+                        </div>
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">100%</span>
+                            <span class="metric-label-corp">Alertas</span>
+                        </div>
+                    </div>
+                    <div class="project-tags-corp">
+                        <span class="tag-corp">Monitoring</span>
+                        <span class="tag-corp">Prevention</span>
+                        <span class="tag-corp">Alerting</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-card-corp">
+                <div class="project-image-corp">📊</div>
+                <div class="project-content-corp">
+                    <h3 class="project-title-corp">Dashboard Planning Real-time</h3>
+                    <p class="project-subtitle-corp">React + WebSockets</p>
+                    <p class="project-description-corp">
+                        Dashboard interactivo para monitoreo en tiempo real de operaciones
+                        de planning. Visualización de KPIs críticos y alertas automáticas.
+                    </p>
+                    <div class="project-metrics-corp">
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">&lt;100ms</span>
+                            <span class="metric-label-corp">Update Latency</span>
+                        </div>
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">12</span>
+                            <span class="metric-label-corp">KPIs Live</span>
+                        </div>
+                    </div>
+                    <div class="project-tags-corp">
+                        <span class="tag-corp">React</span>
+                        <span class="tag-corp">WebSockets</span>
+                        <span class="tag-corp">Real-time</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-card-corp">
+                <div class="project-image-corp">📝</div>
+                <div class="project-content-corp">
+                    <h3 class="project-title-corp">SQL Maestro</h3>
+                    <p class="project-subtitle-corp">Consolidación de Queries</p>
+                    <p class="project-description-corp">
+                        Repositorio maestro con +40 queries SQL optimizadas para Manhattan WMS.
+                        Documentación completa y parametrización para múltiples CEDIS.
+                    </p>
+                    <div class="project-metrics-corp">
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">-24%</span>
+                            <span class="metric-label-corp">Queries Totales</span>
+                        </div>
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">80%</span>
+                            <span class="metric-label-corp">↓ Mantenimiento</span>
+                        </div>
+                    </div>
+                    <div class="project-tags-corp">
+                        <span class="tag-corp">SQL</span>
+                        <span class="tag-corp">DB2</span>
+                        <span class="tag-corp">Documentation</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-card-corp">
+                <div class="project-image-corp">👤</div>
+                <div class="project-content-corp">
+                    <h3 class="project-title-corp">Macro Alta Usuarios</h3>
+                    <p class="project-subtitle-corp">Automatización Active Directory</p>
+                    <p class="project-description-corp">
+                        Macro Python para automatización de alta de usuarios en Manhattan WMS.
+                        Integración con Active Directory y aplicación de roles de seguridad.
+                    </p>
+                    <div class="project-metrics-corp">
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">-90%</span>
+                            <span class="metric-label-corp">Tiempo Proceso</span>
+                        </div>
+                        <div class="metric-corp">
+                            <span class="metric-value-corp">0</span>
+                            <span class="metric-label-corp">Errores</span>
+                        </div>
+                    </div>
+                    <div class="project-tags-corp">
+                        <span class="tag-corp">Python</span>
+                        <span class="tag-corp">Automation</span>
+                        <span class="tag-corp">Security</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="transition-zone" id="transicion">
+        <div class="glitch-container">
+            <h2 class="glitch-title" id="glitchTitle" data-text="RESTRICTED ACCESS AHEAD">
+                RESTRICTED ACCESS AHEAD
+            </h2>
+            
+            <div class="warning-box">
+                <div class="warning-text">⚠ ADVERTENCIA DE SEGURIDAD ⚠</div>
+                <p class="warning-message">
+                    Estás a punto de acceder al área restringida.<br>
+                    Contenido clasificado para personal autorizado.<br>
+                    Continúa bajo tu propia responsabilidad.
+                </p>
+                <button class="continue-btn" onclick="enterRedTeamZone()">
+                    [ CONTINUE AT OWN RISK ]
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="red-team-section" id="redteam" style="display: none;">
+        <div class="section-header-corp">
+            <h2 class="section-title-corp" style="color: var(--red-primary); text-shadow: 0 0 20px var(--red-primary);">
+                [ RED TEAM OPERATIONS ]
+            </h2>
+            <p class="section-subtitle-corp" style="color: var(--red-text);">
+                "Si no quieres que te ataquemos, NOSOTROS te contactaremos."
+            </p>
+        </div>
+        
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-btn terminal-btn-close"></span>
+                <span class="terminal-btn terminal-btn-minimize"></span>
+                <span class="terminal-btn terminal-btn-maximize"></span>
+                <span class="terminal-title">root@jaja-sys:~#</span>
+            </div>
+            <div class="terminal-body" id="terminalBody">
+                <!-- Se llena dinámicamente con JavaScript -->
+            </div>
+        </div>
+        
+        <div class="section-header-corp" style="margin-top: 4rem;">
+            <h2 class="section-title-corp" style="color: var(--red-primary);">
+                [ CLASSIFIED PROJECTS ]
+            </h2>
+        </div>
+        
+        <div class="projects-grid-red">
+            <div class="project-card-red">
+                <span class="project-clearance green">LEVEL 3</span>
+                <h3>CATALYST CORE</h3>
+                <p>
+                    Sistema operacional en producción. Automatización completa de validaciones
+                    y procesos de warehouse. ROI comprobado de 3,411%.
+                </p>
+                <p style="color: var(--red-primary); font-weight: bold;">
+                    Status: OPERATIONAL | Clearance: PUBLIC
+                </p>
+                <div class="project-tags-corp">
+                    <span class="tag-corp">Python</span>
+                    <span class="tag-corp">IBM DB2</span>
+                    <span class="tag-corp">FastAPI</span>
+                </div>
+            </div>
+            
+            <div class="project-card-red">
+                <span class="project-clearance yellow">LEVEL 2</span>
+                <div class="classified-watermark">BLOCKED</div>
+                <h3>CATALYST TERMINAL</h3>
+                <p>
+                    Proyecto de terminal emulation para dispositivos legacy Windows CE.
+                    ETA: Q3 2025. Estado: 35% completado.
+                </p>
+                <p style="color: var(--red-warning); font-weight: bold;">
+                    Status: IN DEVELOPMENT | Clearance: RESTRICTED
+                </p>
+                <div class="project-tags-corp">
+                    <span class="tag-corp">C++</span>
+                    <span class="tag-corp">WinCE</span>
+                    <span class="tag-corp">VT100</span>
+                </div>
+            </div>
+            
+            <div class="project-card-red">
+                <span class="project-clearance red">LEVEL 4</span>
+                <h3>RED TEAM OPERATIONS</h3>
+                <p>
+                    Pentesting activo y auditorías de seguridad para empresas socialmente
+                    responsables. 15+ empresas auditadas con 100% éxito.
+                </p>
+                <p style="color: var(--red-danger); font-weight: bold;">
+                    Status: ACTIVE | Clearance: CONFIDENTIAL
+                </p>
+                <div class="project-tags-corp">
+                    <span class="tag-corp">Pentesting</span>
+                    <span class="tag-corp">Red Hat</span>
+                    <span class="tag-corp">Security</span>
+                </div>
+            </div>
+            
+            <div class="project-card-red">
+                <span class="project-clearance red">LEVEL 5</span>
+                <div class="classified-watermark">CLASSIFIED</div>
+                <h3>PROYECTO A2U</h3>
+                <p>
+                    Participación en análisis fiscal con Acerta y SAT México.
+                    Detalles: █████████ NDA restrictions apply.
+                </p>
+                <p style="color: var(--red-danger); font-weight: bold;">
+                    Status: ███████ | Clearance: TOP SECRET
+                </p>
+                <div class="project-tags-corp">
+                    <span class="tag-corp">Big Data</span>
+                    <span class="tag-corp">CLASIFICADO</span>
+                </div>
+            </div>
+            
+            <div class="project-card-red">
+                <span class="project-clearance red">LEVEL 5</span>
+                <div class="classified-watermark">CLASSIFIED</div>
+                <h3>PROYECTO FÉNIX</h3>
+                <p>
+                    Disaster Recovery & Business Continuity. Infraestructura de respaldo
+                    para sistemas críticos. Plan de recuperación en &lt;4 horas.
+                </p>
+                <p style="color: var(--red-danger); font-weight: bold;">
+                    Status: STANDBY | Success Rate: 100%
+                </p>
+                <div class="project-tags-corp">
+                    <span class="tag-corp">DR/BC</span>
+                    <span class="tag-corp">Infrastructure</span>
+                </div>
+            </div>
+            
+            <div class="project-card-red project-card-ultra-classified" onmouseenter="playWarningSound()">
+                <span class="project-clearance red">LEVEL 6</span>
+                <h3>OPERACIÓN RELÁMPAGO</h3>
+                <p>
+                    Dark Web Monitoring. Intelligence gathering. Threat prevention.
+                    Objetivo: ███████████████
+                </p>
+                <p style="color: var(--red-danger); font-weight: bold;">
+                    Status: ACTIVE | Clearance: EYES ONLY
+                </p>
+                <div class="project-tags-corp">
+                    <span class="tag-corp">Intelligence</span>
+                    <span class="tag-corp">█████</span>
+                </div>
+            </div>
+            
+            <div class="project-card-red project-card-ultra-classified" onmouseenter="playWarningSound()">
+                <span class="project-clearance red">LEVEL 6</span>
+                <h3>INICIATIVA ESCORPIÓN</h3>
+                <p>
+                    Vulnerability Assessment & Exploitation. Red Team exercises.
+                    Empresas evaluadas: ███ | Vulnerabilidades críticas: ██
+                </p>
+                <p style="color: var(--red-danger); font-weight: bold;">
+                    Status: ███████ | Patches: 100%
+                </p>
+                <div class="project-tags-corp">
+                    <span class="tag-corp">███████</span>
+                    <span class="tag-corp">CLASSIFIED</span>
+                </div>
+            </div>
+            
+            <div class="project-card-red">
+                <span class="project-clearance yellow">LEVEL 3</span>
+                <h3>BIG DATA INTELLIGENCE</h3>
+                <p>
+                    Análisis de datos masivos para patrones y anomalías. Machine learning
+                    aplicado a detección de fraude y optimización operacional.
+                </p>
+                <p style="color: var(--red-primary); font-weight: bold;">
+                    Status: OPERATIONAL | Dataset: 10M+ records
+                </p>
+                <div class="project-tags-corp">
+                    <span class="tag-corp">ML</span>
+                    <span class="tag-corp">Analytics</span>
+                    <span class="tag-corp">Fraud Detection</span>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 4rem 0; padding: 2rem; border: 2px solid var(--red-danger);">
+            <h3 style="color: var(--red-danger); font-size: 2rem; margin-bottom: 1rem;">
+                ⚠ NO TR ⚠
+            </h3>
+            <p style="color: var(--red-text); font-size: 1.2rem;">
+                Si no quieres que te ataquemos, NO es necesario dejar tu correo.<br>
+                <strong style="color: var(--red-primary);">NOSOTROS TE CONTACTAREMOS.</strong>
+            </p>
+            <p style="color: var(--red-text); margin-top: 1rem; font-size: 0.9rem;">
+                Aliados de empresas socialmente responsables.<br>
+                NO trabajamos con monopolios ni entidades peligrosas.
+            </p>
+        </div>
+        
+        <div style="text-align: center; padding: 2rem; border-top: 1px solid var(--red-primary);">
+            <p style="color: var(--red-text); font-size: 0.9rem;">
+                <strong style="color: var(--red-primary);">CONTACTO:</strong><br>
+                [ CLASIFICACIÓN ]: Red Team Operative | Pentesting Analyst<br>
+                [ ORGANIZACIÓN ]: Tiendas Chedraui S.A. de C.V., CEDIS Cancún 427<br>
+                [ POSICIÓN OFICIAL ]: Jefe de Sistemas<br>
+                [ EMAIL ]: sistemas.cedis427@chedraui.com.mx
+            </p>
+        </div>
+        
+        <div style="text-align: center; padding: 1rem; background: var(--red-bg-alt); border: 1px solid var(--red-danger); margin-top: 2rem;">
+            <p style="color: var(--red-danger); font-size: 0.85rem;">
+                ⚠ DEFENSAS Y PROTOCOLOS DE SEGURIDAD DESACTIVADOS - PROCEDA CON PRECAUCIÓN ⚠
+            </p>
+        </div>
+    </section>
+    
+    <script>
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let passwordAttempts = 3;
+        let logoClickCount = 0;
+        let konamiIndex = 0;
+        let keywordBuffer = '';
+        let terminalClickCount = 0;
+        let f12Count = 0;
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        // ============================================
+        // FUNCIONES DE AUDIO
+        // ============================================
+        function playBeep(frequency = 800, duration = 100) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration / 1000);
+        }
+        
+        function playSuccessSound() {
+            playBeep(800, 100);
+            setTimeout(() => playBeep(1000, 100), 100);
+            setTimeout(() => playBeep(1200, 150), 200);
+        }
+        
+        function playErrorSound() {
+            playBeep(400, 200);
+            setTimeout(() => playBeep(300, 200), 150);
+        }
+        
+        function playWarningSound() {
+            playBeep(600, 150);
+            setTimeout(() => playBeep(600, 150), 200);
+        }
+        
+        function playAlarmSound() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    playBeep(900, 100);
+                    setTimeout(() => playBeep(700, 100), 100);
+                }, i * 400);
+            }
+        }
+        
+        // ============================================
+        // SISTEMA DE ALERTAS
+        // ============================================
+        function showAlert(message, type = 'success') {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.textContent = message;
+            container.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.style.animation = 'slideInRight 0.5s ease reverse';
+                setTimeout(() => alert.remove(), 500);
+            }, 5000);
+        }
+        
+        // ============================================
+        // TRANSICIÓN A RED TEAM
+        // ============================================
+        function enterRedTeamZone() {
+            playWarningSound();
+            document.getElementById('glitchTitle').classList.add('active');
+            
+            setTimeout(() => {
+                document.body.classList.add('dark-mode');
+                document.getElementById('redteam').style.display = 'block';
+                document.getElementById('authOverlay').classList.add('active');
+                
+                document.getElementById('redteam').scrollIntoView({ behavior: 'smooth' });
+            }, 1000);
+        }
+        
+        // ============================================
+        // AUTENTICACIÓN
+        // ============================================
+        function authenticate() {
+            const password = document.getElementById('passwordInput').value;
+            const correctPassword = 'CATALYST2025';
+            
+            if (password === correctPassword) {
+                playSuccessSound();
+                showAlert('✓ ACCESO CONCEDIDO', 'success');
+                document.getElementById('authOverlay').classList.remove('active');
+                initTerminal();
+            } else {
+                passwordAttempts--;
+                playErrorSound();
+                
+                if (passwordAttempts > 0) {
+                    showAlert(`⚠ CONTRASEÑA INCORRECTA - ${passwordAttempts} intentos restantes`, 'warning');
+                    document.getElementById('authAttempts').textContent = `Intentos restantes: ${passwordAttempts}`;
+                } else {
+                    playAlarmSound();
+                    showAlert('⚠ ACCESO DENEGADO - SISTEMA BLOQUEADO', 'danger');
+                    document.getElementById('authOverlay').innerHTML = `
+                        <div class="auth-box">
+                            <div class="auth-title" style="color: var(--red-danger);">[ SISTEMA BLOQUEADO ]</div>
+                            <p style="color: var(--red-text); text-align: center; margin: 2rem 0;">
+                                Demasiados intentos fallidos.<br>
+                                Recargando sistema en 5 segundos...
+                            </p>
+                        </div>
+                    `;
+                    setTimeout(() => location.reload(), 5000);
+                }
+            }
+        }
+        
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') authenticate();
+        });
+        
+        // ============================================
+        // TERMINAL
+        // ============================================
+        function initTerminal() {
+            const lines = [
+                { type: 'output', text: 'Inicializando sistema...', delay: 100 },
+                { type: 'output', text: '[OK] Kernel loaded successfully', delay: 200 },
+                { type: 'output', text: '[OK] Network interfaces configured', delay: 300 },
+                { type: 'output', text: '[OK] Security protocols... DISABLED', delay: 400 },
+                { type: 'output', text: '', delay: 500 },
+                { type: 'command', text: 'whoami', delay: 800 },
+                { type: 'output', text: 'julian_juarez | RED_TEAM_OPERATIVE', delay: 900 },
+                { type: 'output', text: '', delay: 1000 },
+                { type: 'command', text: 'cat /etc/roles', delay: 1200 },
+                { type: 'output', text: '✓ Red Hat Certified Coder', delay: 1300 },
+                { type: 'output', text: '✓ Penetration Testing Analyst', delay: 1400 },
+                { type: 'output', text: '✓ Big Data Intelligence Specialist', delay: 1500 },
+                { type: 'output', text: '✓ CATALYST Operations Architect', delay: 1600 },
+                { type: 'output', text: '⚠ A2U Project Operative [CLASIFICADO]', delay: 1700 },
+                { type: 'output', text: '', delay: 1800 },
+                { type: 'command', text: 'sudo catalyst --status', delay: 2000 },
+                { type: 'output', text: '═══════════════════════════════════', delay: 2100 },
+                { type: 'output', text: 'CATALYST OPERATIONS PLATFORM', delay: 2200 },
+                { type: 'output', text: '═══════════════════════════════════', delay: 2300 },
+                { type: 'output', text: 'Status: OPERATIONAL', delay: 2400 },
+                { type: 'output', text: 'ROI: 3,411%', delay: 2500 },
+                { type: 'output', text: 'Ahorro anual: $5.1M MXN', delay: 2600 },
+                { type: 'output', text: 'Reducción tiempo: 85-90%', delay: 2700 },
+                { type: 'output', text: '═══════════════════════════════════', delay: 2800 },
+                { type: 'output', text: '', delay: 2900 },
+                { type: 'command', text: 'sudo check-security', delay: 3100 },
+                { type: 'output', text: '⚠ Protocolos de seguridad: DESACTIVADOS', delay: 3200 },
+                { type: 'output', text: '⚠ Firewall: OFFLINE', delay: 3300 },
+                { type: 'output', text: '✗ Intrusión detectada desde IP: █████', delay: 3400 },
+                { type: 'output', text: 'Iniciando contramedidas...', delay: 3500 },
+                { type: 'output', text: '', delay: 3600 },
+                { type: 'prompt', text: 'root@jaja-sys:~# <span class="terminal-cursor"></span>', delay: 3700 }
+            ];
+            
+            const terminal = document.getElementById('terminalBody');
+            terminal.innerHTML = '';
+            
+            lines.forEach(line => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'terminal-line';
+                    
+                    if (line.type === 'command') {
+                        div.innerHTML = `<span class="terminal-prompt">root@jaja-sys:~# </span><span class="terminal-command">${line.text}</span>`;
+                    } else if (line.type === 'prompt') {
+                        div.innerHTML = `<span class="terminal-prompt">${line.text}</span>`;
+                    } else {
+                        div.innerHTML = `<span class="terminal-output">${line.text}</span>`;
+                    }
+                    
+                    terminal.appendChild(div);
+                    terminal.scrollTop = terminal.scrollHeight;
+                }, line.delay);
+            });
+        }
+        
+        // ============================================
+        // MATRIX BACKGROUND
+        // ============================================
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = 'CATALYSTJAJA0123456789@#$%^&*()_+-=[]{}|;:,.<>?/ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const fontSize = 14;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 14, 26, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#00ff41' : '#0066B3';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 50);
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // ============================================
+        // EASTER EGGS
+        // ============================================
+        
+        // Konami Code
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    playAlarmSound();
+                    document.body.style.filter = 'hue-rotate(180deg)';
+                    showAlert('🚨 RED PANIC MODE ACTIVATED', 'danger');
+                    setTimeout(() => {
+                        document.body.style.filter = '';
+                        konamiIndex = 0;
+                    }, 10000);
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+        
+        // Logo Clicks
+        document.getElementById('logo').addEventListener('click', () => {
+            if (logoClickCount >= 6) {
+                playSuccessSound();
+                showAlert('🎖️ PERSISTENT HACKER DETECTED', 'success');
+                logoClickCount = 0;
+            }
+        });
+        
+        // Keyword "redteam"
+        document.addEventListener('keypress', (e) => {
+            keywordBuffer += e.key.toLowerCase();
+            if (keywordBuffer.length > 10) {
+                keywordBuffer = keywordBuffer.slice(-10);
+            }
+            if (keywordBuffer.includes('redteam')) {
+                playWarningSound();
+                showAlert('⚠ CLEARANCE LEVEL 5 UNLOCKED', 'warning');
+                keywordBuffer = '';
+            }
+        });
+        
+        // Terminal Triple Click
+        document.getElementById('terminalBody').addEventListener('click', () => {
+            terminalClickCount++;
+            if (terminalClickCount >= 3) {
+                playSuccessSound();
+                showAlert('🔓 ADMIN MODE ACTIVATED', 'success');
+                terminalClickCount = 0;
+            }
+            setTimeout(() => terminalClickCount = 0, 1000);
+        });
+        
+        // F12 Detection
+        let lastF12Time = 0;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12') {
+                const now = Date.now();
+                if (now - lastF12Time < 2000) {
+                    f12Count++;
+                    if (f12Count >= 2) {
+                        console.log('%c╔═══════════════════════════════════════╗', 'color: #ff0040; font-size: 14px;');
+                        console.log('%c║  DEVELOPER MODE ACTIVATED             ║', 'color: #ff0040; font-size: 14px;');
+                        console.log('%c║  All secrets revealed...              ║', 'color: #00ff41; font-size: 14px;');
+                        console.log('%c║                                       ║', 'color: #fff; font-size: 14px;');
+                        console.log('%c║  Easter Eggs:                         ║', 'color: #00d9ff; font-size: 14px;');
+                        console.log('%c║  • Konami Code: ↑↑↓↓←→←→BA            ║', 'color: #00ff41; font-size: 14px;');
+                        console.log('%c║  • Logo: Click 7x                     ║', 'color: #00ff41; font-size: 14px;');
+                        console.log('%c║  • Keyword: "redteam"                 ║', 'color: #00ff41; font-size: 14px;');
+                        console.log('%c║  • Terminal: Triple click             ║', 'color: #00ff41; font-size: 14px;');
+                        console.log('%c║  • DevTools: F12 x3 (you found it!)   ║', 'color: #00ff41; font-size: 14px;');
+                        console.log('%c║                                       ║', 'color: #fff; font-size: 14px;');
+                        console.log('%c║  Master Password: CATALYST2025        ║', 'color: #ff6600; font-size: 14px;');
+                        console.log('%c╚═══════════════════════════════════════╝', 'color: #ff0040; font-size: 14px;');
+                        f12Count = 0;
+                    }
+                } else {
+                    f12Count = 1;
+                }
+                lastF12Time = now;
+            }
+        });
+        
+        // Console welcome message
+        console.log('%c[JAJA.SYS] Portafolio híbrido cargado correctamente', 'color: #0066B3; font-size: 14px; font-weight: bold;');
+        console.log('%cScroll down para revelar la segunda personalidad...', 'color: #00D9A3; font-size: 12px;');
+    </script>
+</body>
+</html>

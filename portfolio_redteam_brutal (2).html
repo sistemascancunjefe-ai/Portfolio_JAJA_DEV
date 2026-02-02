@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[ ACCESS GRANTED ] JAJA.SYS - RED TEAM OPERATIVE</title>
+    
+    <style>
+        /* ============================================
+           VARIABLES Y MODOS DE COLOR
+           ============================================ */
+        :root {
+            --mode: 'secure';
+            
+            /* SECURE MODE - Verde Hacker */
+            --primary: #00ff41;
+            --secondary: #0066B3;
+            --accent: #00d9ff;
+            --danger: #ff0040;
+            --warning: #ff6600;
+            --dark-bg: #0a0e1a;
+            --darker-bg: #050810;
+            --card-bg: #131824;
+            --text-primary: #e8eaf0;
+            --text-secondary: #9ca3af;
+        }
+        
+        [data-mode="warning"] {
+            --primary: #ff6600;
+            --accent: #ffaa00;
+        }
+        
+        [data-mode="danger"] {
+            --primary: #ff0040;
+            --accent: #ff4d4d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Courier New', 'Consolas', monospace;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        /* ============================================
+           MATRIX BACKGROUND
+           ============================================ */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.08;
+        }
+        
+        /* ============================================
+           SISTEMA DE AUTENTICACIÓN
+           ============================================ */
+        .auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 8, 16, 0.98);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        
+        .auth-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .auth-box {
+            background: var(--card-bg);
+            border: 3px solid var(--primary);
+            padding: 3rem;
+            max-width: 600px;
+            box-shadow: 0 0 50px var(--primary);
+            animation: scanline 8s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0%, 100% { box-shadow: 0 0 50px var(--primary), inset 0 0 50px rgba(0, 255, 65, 0.1); }
+            50% { box-shadow: 0 0 80px var(--primary), inset 0 0 80px rgba(0, 255, 65, 0.2); }
+        }
+        
+        .auth-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px var(--primary);
+        }
+        
+        .auth-warning {
+            background: rgba(255, 0, 64, 0.2);
+            border-left: 4px solid var(--danger);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            animation: blink 2s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .auth-input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--darker-bg);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+        
+        .auth-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px var(--primary);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-btn:hover {
+            background: var(--primary);
+            color: var(--dark-bg);
+            box-shadow: 0 0 30px var(--primary);
+        }
+        
+        .auth-attempts {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--danger);
+            font-size: 0.9rem;
+        }
+        
+        /* ============================================
+           ALERTA DE SEGURIDAD FLOTANTE
+           ============================================ */
+        .security-alert {
+            position: fixed;
+            top: 80px;
+            right: -400px;
+            width: 350px;
+            background: rgba(19, 24, 36, 0.95);
+            border: 2px solid var(--danger);
+            padding: 1.5rem;
+            z-index: 9000;
+            box-shadow: 0 0 30px var(--danger);
+            transition: right 0.5s ease;
+        }
+        
+        .security-alert.show {
+            right: 20px;
+        }
+        
+        .security-alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .security-alert-title {
+            color: var(--danger);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .security-alert-close {
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .security-alert-body {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        /* ============================================
+           NAVEGACIÓN CON INDICADOR DE SEGURIDAD
+           ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
+        
+        .security-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            text-shadow: 0 0 5px var(--primary);
+        }
+        
+        .nav-links a::before {
+            content: '> ';
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .nav-links a:hover::before {
+            opacity: 1;
+        }
+        
+        /* ============================================
+           HERO SECTION RED TEAM
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-text {
+            text-align: left;
+        }
+        
+        .hero-classification {
+            display: inline-block;
+            background: rgba(255, 0, 64, 0.2);
+            border: 2px solid var(--danger);
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--danger);
+            text-transform: uppercase;
+            animation: blink 2s ease-in-out infinite;
+        }
+        
+        .hero-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
+        
+        .hero-roles {
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            background: rgba(0, 255, 65, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 0.8rem 1.5rem;
+            color: var(--primary);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .role-badge:hover {
+            background: rgba(0, 255, 65, 0.2);
+            border-left-width: 8px;
+            transform: translateX(5px);
+        }
+        
+        .role-badge.classified {
+            background: rgba(255, 0, 64, 0.1);
+            border-left-color: var(--danger);
+            color: var(--danger);
+        }
+        
+        .role-badge.warning {
+            background: rgba(255, 102, 0, 0.1);
+            border-left-color: var(--warning);
+            color: var(--warning);
+        }
+        
+        /* ============================================
+           TERMINAL AVANZADO
+           ============================================ */
+        .terminal-window {
+            background: rgba(19, 24, 36, 0.95);
+            border: 3px solid var(--primary);
+            border-radius: 5px;
+            padding: 1rem;
+            box-shadow: 0 0 40px var(--primary);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        .terminal-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .terminal-btn.red { background: #ff5f56; }
+        .terminal-btn.yellow { background: #ffbd2e; }
+        .terminal-btn.green { background: #27c93f; }
+        
+        .terminal-title {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        
+        .terminal-body {
+            color: var(--primary);
+            font-size: 0.85rem;
+            line-height: 1.8;
+            min-height: 500px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .terminal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .terminal-body::-webkit-scrollbar-track {
+            background: var(--darker-bg);
+        }
+        
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            box-shadow: 0 0 5px var(--primary);
+        }
+        
+        .terminal-line {
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        .terminal-prompt {
+            color: var(--accent);
+        }
+        
+        .terminal-command {
+            color: var(--primary);
+        }
+        
+        .terminal-output {
+            color: var(--text-secondary);
+            padding-left: 1rem;
+        }
+        
+        .terminal-success {
+            color: var(--primary);
+        }
+        
+        .terminal-error {
+            color: var(--danger);
+        }
+        
+        .terminal-warning {
+            color: var(--warning);
+        }
+        
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1em;
+            background: var(--primary);
+            margin-left: 5px;
+            animation: blink-cursor 1s infinite;
+        }
+        
+        @keyframes blink-cursor {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        /* ============================================
+           SECCIONES
+           ============================================ */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title::before {
+            content: '[ ';
+            color: var(--accent);
+        }
+        
+        .section-title::after {
+            content: ' ]';
+            color: var(--accent);
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* ============================================
+           PROYECTOS CON NIVELES DE ACCESO
+           ============================================ */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card {
+            background: rgba(19, 24, 36, 0.9);
+            border: 2px solid var(--primary);
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .project-card.classified {
+            border-color: var(--danger);
+            opacity: 0.7;
+        }
+        
+        .project-card.classified::after {
+            content: '[ CLASSIFIED ]';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 3rem;
+            color: var(--danger);
+            opacity: 0.3;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        
+        .project-card.future {
+            border-color: var(--accent);
+            opacity: 0.6;
+        }
+        
+        .project-card.future::after {
+            content: '[ BLOCKED ]';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 3rem;
+            color: var(--accent);
+            opacity: 0.3;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        
+        .project-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 30px var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .project-clearance {
+            background: rgba(0, 255, 65, 0.2);
+            border: 1px solid var(--primary);
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+        
+        .project-clearance.red {
+            background: rgba(255, 0, 64, 0.2);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        
+        .project-clearance.yellow {
+            background: rgba(255, 102, 0, 0.2);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+        
+        .project-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .project-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .project-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .metric {
+            background: var(--darker-bg);
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--primary);
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tag {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        /* ============================================
+           TECH STACK
+           ============================================ */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .tech-card {
+            background: rgba(19, 24, 36, 0.9);
+            border: 2px solid var(--primary);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+        }
+        
+        .tech-ascii-icon {
+            font-family: 'Courier New', monospace;
+            font-size: 0.6rem;
+            line-height: 1;
+            color: var(--primary);
+            white-space: pre;
+            margin-bottom: 1rem;
+        }
+        
+        .tech-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .tech-level {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--darker-bg);
+            border: 1px solid var(--primary);
+            margin-top: 0.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            transition: width 2s ease;
+        }
+        
+        /* ============================================
+           CONTACTO AMENAZANTE
+           ============================================ */
+        .contact-warning-box {
+            background: rgba(255, 0, 64, 0.1);
+            border: 3px solid var(--danger);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .contact-warning-title {
+            font-size: 2rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px var(--danger);
+        }
+        
+        .contact-warning-text {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        
+        .contact-ascii {
+            font-family: 'Courier New', monospace;
+            font-size: 0.65rem;
+            line-height: 1;
+            color: var(--primary);
+            white-space: pre;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .contact-item {
+            background: rgba(19, 24, 36, 0.8);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-item:hover {
+            border-left-width: 8px;
+            box-shadow: 0 0 20px var(--primary);
+        }
+        
+        .contact-label {
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        
+        .contact-value {
+            color: var(--text-primary);
+            font-size: 1.05rem;
+        }
+        
+        /* ============================================
+           FOOTER
+           ============================================ */
+        footer {
+            background: var(--darker-bg);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 2px solid var(--danger);
+        }
+        
+        .footer-warning {
+            background: rgba(255, 0, 64, 0.2);
+            border: 2px solid var(--danger);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            animation: blink 2s ease-in-out infinite;
+        }
+        
+        .footer-warning-text {
+            color: var(--danger);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        
+        .footer-ascii {
+            font-family: 'Courier New', monospace;
+            font-size: 0.55rem;
+            line-height: 1;
+            color: var(--primary);
+            white-space: pre;
+            margin: 2rem 0;
+            opacity: 0.7;
+        }
+        
+        /* ============================================
+           EASTER EGGS
+           ============================================ */
+        .easter-egg-box {
+            position: fixed;
+            bottom: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(19, 24, 36, 0.98);
+            border: 3px solid var(--primary);
+            padding: 2rem;
+            width: 80%;
+            max-width: 800px;
+            z-index: 9999;
+            box-shadow: 0 0 50px var(--primary);
+            transition: bottom 0.5s ease;
+        }
+        
+        .easter-egg-box.show {
+            bottom: 20px;
+        }
+        
+        .easter-egg-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .easter-egg-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        
+        .easter-egg-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            color: var(--danger);
+            font-size: 1.5rem;
+        }
+        
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 1024px) {
+            .hero-content,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-mode="secure">
+    <!-- SISTEMA DE AUTENTICACIÓN -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-box">
+            <pre class="auth-title">
+╔═══════════════════════════════════════╗
+║   SISTEMA DE ACCESO RESTRINGIDO      ║
+║   RED TEAM OPERATIVE CLEARANCE       ║
+╚═══════════════════════════════════════╝
+            </pre>
+            
+            <div class="auth-warning">
+                <strong>⚠ ADVERTENCIA DE SEGURIDAD ⚠</strong><br>
+                Acceso no autorizado será monitoreado y reportado.<br>
+                Todos los intentos de acceso quedan registrados.
+            </div>
+            
+            <input 
+                type="password" 
+                class="auth-input" 
+                id="authPassword" 
+                placeholder="INGRESE CÓDIGO DE ACCESO"
+                autocomplete="off"
+            >
+            
+            <button class="auth-btn" onclick="authenticate()">
+                [ AUTENTICAR ]
+            </button>
+            
+            <div class="auth-attempts" id="authAttempts">
+                Intentos restantes: <span id="attemptsLeft">3</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALERTA DE SEGURIDAD FLOTANTE -->
+    <div class="security-alert" id="securityAlert">
+        <div class="security-alert-header">
+            <span class="security-alert-title">⚠ ALERTA DE SEGURIDAD</span>
+            <span class="security-alert-close" onclick="closeAlert()">✕</span>
+        </div>
+        <div class="security-alert-body" id="alertBody">
+            Protocolos de seguridad activos. Sistema monitoreado 24/7.
+        </div>
+    </div>
+
+    <!-- EASTER EGG BOX -->
+    <div class="easter-egg-box" id="easterEggBox">
+        <span class="easter-egg-close" onclick="closeEasterEgg()">✕</span>
+        <div class="easter-egg-title">[ EASTER EGG DESBLOQUEADO ]</div>
+        <div class="easter-egg-content" id="easterEggContent">
+            <!-- Se llena dinámicamente -->
+        </div>
+    </div>
+
+    <!-- MATRIX BACKGROUND -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- NAVEGACIÓN -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="logo">[ JAJA.SYS ]</div>
+            <div class="security-status">
+                <span class="status-dot"></span>
+                <span id="statusText">SECURE MODE</span>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#inicio">INICIO</a></li>
+            <li><a href="#operaciones">OPERACIONES</a></li>
+            <li><a href="#proyectos">PROYECTOS</a></li>
+            <li><a href="#capacidades">CAPACIDADES</a></li>
+            <li><a href="#contacto">CONTACTO</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-classification">[ TOP SECRET - EYES ONLY ]</span>
+                
+                <h1 class="hero-title">
+                    JULIÁN ALEXANDER<br>
+                    JUÁREZ ALVARADO
+                </h1>
+                
+                <div class="hero-roles">
+                    <div class="role-badge">
+                        ▸ RED HAT CERTIFIED CODER
+                    </div>
+                    <div class="role-badge">
+                        ▸ PENETRATION TESTING ANALYST
+                    </div>
+                    <div class="role-badge">
+                        ▸ BIG DATA INTELLIGENCE SPECIALIST
+                    </div>
+                    <div class="role-badge">
+                        ▸ CATALYST OPERATIONS ARCHITECT
+                    </div>
+                    <div class="role-badge classified">
+                        ▸ A2U PROJECT OPERATIVE (ACERTA/SAT)
+                    </div>
+                    <div class="role-badge warning">
+                        ▸ JEFE DE SISTEMAS - CEDIS 427
+                    </div>
+                </div>
+                
+                <pre style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 2rem;">
+╔═══════════════════════════════════════════════╗
+║                                               ║
+║  "Aliado de empresas socialmente             ║
+║   responsables. No representamos monopolios.  ║
+║   Apoyamos proyectos independientes."         ║
+║                                               ║
+║  "Si no quieres que te ataquemos...           ║
+║   NOSOTROS te contactaremos."                 ║
+║                                               ║
+╚═══════════════════════════════════════════════╝
+                </pre>
+            </div>
+            
+            <!-- TERMINAL AVANZADO -->
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-btns">
+                        <div class="terminal-btn red"></div>
+                        <div class="terminal-btn yellow"></div>
+                        <div class="terminal-btn green"></div>
+                    </div>
+                    <div class="terminal-title">root@jaja-sys:~#</div>
+                </div>
+                <div class="terminal-body" id="terminalBody">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OPERACIONES -->
+    <section id="operaciones">
+        <div class="section-header">
+            <h2 class="section-title">OPERACIONES ACTIVAS</h2>
+            <p class="section-subtitle">
+                Infraestructura crítica, análisis de vulnerabilidades, y automatización enterprise
+            </p>
+        </div>
+        
+        <div class="projects-grid">
+            <!-- CATALYST Core -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div>
+                        <h3 class="project-title">CATALYST CORE</h3>
+                        <p class="project-subtitle">[ OPERACIONAL | PRODUCCIÓN ]</p>
+                    </div>
+                    <span class="project-clearance">LEVEL 3</span>
+                </div>
+                <p class="project-description">
+                    Sistema de automatización enterprise para Manhattan WMS. 
+                    Validación de POs, tracking real-time, reportes corporativos.
+                    ROI 3,411% demostrado.
+                </p>
+                <div class="project-metrics">
+                    <div class="metric">
+                        <span class="metric-value">$5.1M</span>
+                        <span class="metric-label">Ahorro/Año</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value">85-90%</span>
+                        <span class="metric-label">↓ Tiempo</span>
+                    </div>
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">IBM DB2</span>
+                    <span class="tag">FastAPI</span>
+                </div>
+            </div>
+            
+            <!-- A2U Project -->
+            <div class="project-card classified">
+                <div class="project-header">
+                    <div>
+                        <h3 class="project-title">PROYECTO A2U</h3>
+                        <p class="project-subtitle">[ CLASIFICADO | ACERTA/SAT ]</p>
+                    </div>
+                    <span class="project-clearance red">LEVEL 5</span>
+                </div>
+                <p class="project-description">
+                    Participación en proyecto de análisis de datos fiscales para SAT México.
+                    Colaboración con Acerta Soluciones. Detalles restringidos por NDA.
+                </p>
+                <div class="project-metrics">
+                    <div class="metric">
+                        <span class="metric-value">█████</span>
+                        <span class="metric-label">CLASIFICADO</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value">█████</span>
+                        <span class="metric-label">CLASIFICADO</span>
+                    </div>
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Big Data</span>
+                    <span class="tag">CLASIFICADO</span>
+                </div>
+            </div>
+            
+            <!-- Red Team Operations -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div>
+                        <h3 class="project-title">RED TEAM OPS</h3>
+                        <p class="project-subtitle">[ ACTIVO | PENTESTING ]</p>
+                    </div>
+                    <span class="project-clearance red">LEVEL 4</span>
+                </div>
+                <p class="project-description">
+                    Análisis de vulnerabilidades, pruebas de penetración, y auditorías 
+                    de seguridad para infraestructura crítica. Alianza con empresas 
+                    socialmente responsables.
+                </p>
+                <div class="project-metrics">
+                    <div class="metric">
+                        <span class="metric-value">15+</span>
+                        <span class="metric-label">Empresas</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value">100%</span>
+                        <span class="metric-label">Éxito</span>
+                    </div>
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Pentesting</span>
+                    <span class="tag">Red Hat</span>
+                    <span class="tag">Security</span>
+                </div>
+            </div>
+            
+            <!-- CATALYST Terminal -->
+            <div class="project-card future">
+                <div class="project-header">
+                    <div>
+                        <h3 class="project-title">CATALYST TERMINAL</h3>
+                        <p class="project-subtitle">[ BLOQUEADO | DEV 35% ]</p>
+                    </div>
+                    <span class="project-clearance yellow">LEVEL 2</span>
+                </div>
+                <p class="project-description">
+                    OS replacement para dispositivos legacy Windows CE. 
+                    VT100/VT220 emulation. Proyecto en desarrollo.
+                </p>
+                <div class="project-metrics">
+                    <div class="metric">
+                        <span class="metric-value">35%</span>
+                        <span class="metric-label">Progreso</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value">Q3 25</span>
+                        <span class="metric-label">ETA</span>
+                    </div>
+                </div>
+                <div class="project-tags">
+                    <span class="tag">C++</span>
+                    <span class="tag">WinCE</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CAPACIDADES TÉCNICAS -->
+    <section id="capacidades">
+        <div class="section-header">
+            <h2 class="section-title">CAPACIDADES TÉCNICAS</h2>
+            <p class="section-subtitle">
+                Arsenal completo para operaciones de automatización y seguridad
+            </p>
+        </div>
+        
+        <div class="tech-grid">
+            <div class="tech-card">
+                <pre class="tech-ascii-icon">
+╔═══════════╗
+║  PYTHON   ║
+║   ⟨⟩ 3.9+ ║
+╚═══════════╝
+                </pre>
+                <div class="tech-name">Python 3.9+</div>
+                <div class="tech-level">Core Automation</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 95%"></div>
+                </div>
+            </div>
+            
+            <div class="tech-card">
+                <pre class="tech-ascii-icon">
+╔═══════════╗
+║  PENTESTING║
+║    🛡️     ║
+╚═══════════╝
+                </pre>
+                <div class="tech-name">Penetration Testing</div>
+                <div class="tech-level">Red Hat Certified</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%"></div>
+                </div>
+            </div>
+            
+            <div class="tech-card">
+                <pre class="tech-ascii-icon">
+╔═══════════╗
+║  BIG DATA ║
+║    📊     ║
+╚═══════════╝
+                </pre>
+                <div class="tech-name">Big Data Analysis</div>
+                <div class="tech-level">Intelligence Ops</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 88%"></div>
+                </div>
+            </div>
+            
+            <div class="tech-card">
+                <pre class="tech-ascii-icon">
+╔═══════════╗
+║  IBM DB2  ║
+║    🗄️     ║
+╚═══════════╝
+                </pre>
+                <div class="tech-name">IBM DB2</div>
+                <div class="tech-level">Manhattan WMS Expert</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92%"></div>
+                </div>
+            </div>
+            
+            <div class="tech-card">
+                <pre class="tech-ascii-icon">
+╔═══════════╗
+║   REACT   ║
+║    ⚛️     ║
+╚═══════════╝
+                </pre>
+                <div class="tech-name">React 18</div>
+                <div class="tech-level">Frontend Ops</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%"></div>
+                </div>
+            </div>
+            
+            <div class="tech-card">
+                <pre class="tech-ascii-icon">
+╔═══════════╗
+║    GIT    ║
+║    🔀     ║
+╚═══════════╝
+                </pre>
+                <div class="tech-name">Git & GitHub</div>
+                <div class="tech-level">Version Control</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 88%"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto">
+        <div class="section-header">
+            <h2 class="section-title">PROTOCOLO DE CONTACTO</h2>
+        </div>
+        
+        <div class="contact-warning-box">
+            <div class="contact-warning-title">
+                ⚠ ADVERTENCIA CRÍTICA ⚠
+            </div>
+            <div class="contact-warning-text">
+                Si no quieres que te ataquemos, NO ES NECESARIO dejar tu correo.<br>
+                <strong>NOSOTROS TE CONTACTAREMOS.</strong><br><br>
+                Aliados de empresas socialmente responsables.<br>
+                NO trabajamos con monopolios ni entidades peligrosas.
+            </div>
+        </div>
+        
+        <div class="contact-grid">
+            <div>
+                <pre class="contact-ascii">
+╔═══════════════════════════════════════════════╗
+║                                               ║
+║   ███╗   ██╗ ██████╗     ████████╗██████╗    ║
+║   ████╗  ██║██╔═══██╗    ╚══██╔══╝██╔══██╗   ║
+║   ██╔██╗ ██║██║   ██║       ██║   ██████╔╝   ║
+║   ██║╚██╗██║██║   ██║       ██║   ██╔══██╗   ║
+║   ██║ ╚████║╚██████╔╝       ██║   ██║  ██║   ║
+║   ╚═╝  ╚═══╝ ╚═════╝        ╚═╝   ╚═╝  ╚═╝   ║
+║                                               ║
+║         "We contact you, not the other        ║
+║          way around. Stay secure."            ║
+║                                               ║
+╚═══════════════════════════════════════════════╝
+                </pre>
+            </div>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-label">[ CLASIFICACIÓN ]</div>
+                    <div class="contact-value">Red Team Operative | Pentesting Analyst</div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-label">[ ORGANIZACIÓN ]</div>
+                    <div class="contact-value">
+                        Tiendas Chedraui S.A. de C.V.<br>
+                        CEDIS Cancún 427 - Región Sureste
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-label">[ POSICIÓN OFICIAL ]</div>
+                    <div class="contact-value">
+                        Jefe de Sistemas<br>
+                        Especialista en Automatización & Seguridad
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-label">[ PROYECTOS ]</div>
+                    <div class="contact-value">
+                        • CATALYST Operations Platform<br>
+                        • A2U Project (Acerta/SAT) [CLASIFICADO]<br>
+                        • Red Team Operations<br>
+                        • Big Data Intelligence
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-label">[ ALIANZAS ]</div>
+                    <div class="contact-value">
+                        Empresas socialmente responsables<br>
+                        NO monopolios | NO entidades peligrosas
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-warning">
+            <div class="footer-warning-text">
+                ⚠ DEFENSAS Y PROTOCOLOS DE SEGURIDAD DESACTIVADOS - PROCEDA CON PRECAUCIÓN ⚠
+            </div>
+        </div>
+        
+        <pre class="footer-ascii">
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║     ██╗ █████╗      ██╗ █████╗     ███████╗██╗   ██╗███████╗                ║
+║     ██║██╔══██╗     ██║██╔══██╗    ██╔════╝╚██╗ ██╔╝██╔════╝                ║
+║     ██║███████║     ██║███████║    ███████╗ ╚████╔╝ ███████╗                ║
+║██   ██║██╔══██║██   ██║██╔══██║    ╚════██║  ╚██╔╝  ╚════██║                ║
+║╚█████╔╝██║  ██║╚█████╔╝██║  ██║    ███████║   ██║   ███████║                ║
+║ ╚════╝ ╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝    ╚══════╝   ╚═╝   ╚══════╝                ║
+║                                                                               ║
+║              "Red Team Operative | Pentesting Analyst | Big Data"            ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+        </pre>
+        
+        <div style="color: var(--text-secondary); margin-top: 2rem;">
+            <p>&copy; 2025 Julián Alexander Juárez Alvarado | JAJA.SYS</p>
+            <p style="margin-top: 1rem;">
+                Red Hat Certified | Pentesting Operations | CATALYST Architect
+            </p>
+            <p style="margin-top: 0.5rem; opacity: 0.7;">
+                [ Chedraui CEDIS 427 | A2U Project Operative | Security First ]
+            </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
+        let attemptsLeft = 3;
+        let currentMode = 'secure';
+        const correctPassword = 'CATALYST2025';
+        let konamiSequence = [];
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        // ============================================
+        // MATRIX EFFECT
+        // ============================================
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = "JAJA.SYSCATALYST0123456789@#$%^&*()_+-=[]{}|;':,.<>?/ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const fontSize = 14;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 14, 26, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const color = currentMode === 'danger' ? '#ff0040' : 
+                          currentMode === 'warning' ? '#ff6600' : '#00ff41';
+            
+            ctx.fillStyle = color;
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 50);
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // ============================================
+        // AUTENTICACIÓN
+        // ============================================
+        function authenticate() {
+            const password = document.getElementById('authPassword').value.toUpperCase();
+            
+            if (password === correctPassword) {
+                showAlert('✓ ACCESO CONCEDIDO', 'success');
+                document.getElementById('authScreen').classList.add('hidden');
+                setTimeout(startTerminal, 500);
+            } else {
+                attemptsLeft--;
+                document.getElementById('attemptsLeft').textContent = attemptsLeft;
+                
+                if (attemptsLeft <= 0) {
+                    changeMode('danger');
+                    showAlert('⚠ ACCESO DENEGADO - SISTEMA BLOQUEADO', 'danger');
+                    document.getElementById('authPassword').disabled = true;
+                    setTimeout(() => {
+                        alert('SISTEMA BLOQUEADO. Recargue la página para intentar nuevamente.');
+                        location.reload();
+                    }, 2000);
+                } else {
+                    changeMode('warning');
+                    showAlert(`⚠ CONTRASEÑA INCORRECTA - ${attemptsLeft} intentos restantes`, 'warning');
+                }
+            }
+        }
+        
+        document.getElementById('authPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') authenticate();
+        });
+        
+        // ============================================
+        // SISTEMA DE ALERTAS
+        // ============================================
+        function showAlert(message, type) {
+            const alert = document.getElementById('securityAlert');
+            const alertBody = document.getElementById('alertBody');
+            
+            alertBody.textContent = message;
+            
+            if (type === 'danger') {
+                alert.style.borderColor = 'var(--danger)';
+                alert.style.boxShadow = '0 0 30px var(--danger)';
+            } else if (type === 'warning') {
+                alert.style.borderColor = 'var(--warning)';
+                alert.style.boxShadow = '0 0 30px var(--warning)';
+            } else {
+                alert.style.borderColor = 'var(--primary)';
+                alert.style.boxShadow = '0 0 30px var(--primary)';
+            }
+            
+            alert.classList.add('show');
+            setTimeout(() => alert.classList.remove('show'), 5000);
+        }
+        
+        function closeAlert() {
+            document.getElementById('securityAlert').classList.remove('show');
+        }
+        
+        // ============================================
+        // CAMBIO DE MODO
+        // ============================================
+        function changeMode(mode) {
+            currentMode = mode;
+            document.body.setAttribute('data-mode', mode);
+            
+            const statusText = document.getElementById('statusText');
+            
+            if (mode === 'danger') {
+                statusText.textContent = 'DANGER MODE';
+                statusText.style.color = 'var(--danger)';
+            } else if (mode === 'warning') {
+                statusText.textContent = 'WARNING MODE';
+                statusText.style.color = 'var(--warning)';
+            } else {
+                statusText.textContent = 'SECURE MODE';
+                statusText.style.color = 'var(--primary)';
+            }
+        }
+        
+        // ============================================
+        // TERMINAL SIMULADO
+        // ============================================
+        const terminalCommands = [
+            { type: 'prompt', text: 'root@jaja-sys:~#', delay: 0 },
+            { type: 'command', text: 'whoami', delay: 100 },
+            { type: 'output', text: 'julian_juarez | RED_TEAM_OPERATIVE', delay: 300 },
+            { type: 'output', text: '', delay: 200 },
+            
+            { type: 'prompt', text: 'root@jaja-sys:~#', delay: 100 },
+            { type: 'command', text: 'cat /etc/roles', delay: 100 },
+            { type: 'success', text: '✓ Red Hat Certified Coder', delay: 200 },
+            { type: 'success', text: '✓ Penetration Testing Analyst', delay: 200 },
+            { type: 'success', text: '✓ Big Data Intelligence Specialist', delay: 200 },
+            { type: 'success', text: '✓ CATALYST Operations Architect', delay: 200 },
+            { type: 'warning', text: '⚠ A2U Project Operative [CLASIFICADO]', delay: 200 },
+            { type: 'output', text: '', delay: 300 },
+            
+            { type: 'prompt', text: 'root@jaja-sys:~#', delay: 100 },
+            { type: 'command', text: 'sudo catalyst --status', delay: 100 },
+            { type: 'output', text: '═══════════════════════════════════', delay: 300 },
+            { type: 'output', text: 'CATALYST OPERATIONS PLATFORM', delay: 100 },
+            { type: 'output', text: '═══════════════════════════════════', delay: 100 },
+            { type: 'success', text: 'Status: OPERATIONAL', delay: 200 },
+            { type: 'success', text: 'ROI: 3,411%', delay: 200 },
+            { type: 'success', text: 'Ahorro anual: $5.1M MXN', delay: 200 },
+            { type: 'success', text: 'Reducción tiempo: 85-90%', delay: 200 },
+            { type: 'output', text: '═══════════════════════════════════', delay: 300 },
+            { type: 'output', text: '', delay: 300 },
+            
+            { type: 'prompt', text: 'root@jaja-sys:~#', delay: 100 },
+            { type: 'command', text: 'sudo check-security', delay: 100 },
+            { type: 'warning', text: '⚠ Protocolos de seguridad: DESACTIVADOS', delay: 300 },
+            { type: 'warning', text: '⚠ Firewall: OFFLINE', delay: 200 },
+            { type: 'error', text: '✗ Intrusión detectada desde IP: █████', delay: 200 },
+            { type: 'output', text: 'Iniciando contramedidas...', delay: 300 },
+            { type: 'output', text: '', delay: 500 },
+            
+            { type: 'prompt', text: 'root@jaja-sys:~#', delay: 100 },
+            { type: 'command', text: 'cat /etc/motto.txt', delay: 100 },
+            { type: 'output', text: '"Si no quieres que te ataquemos,', delay: 200 },
+            { type: 'output', text: ' NO es necesario dejar tu correo.', delay: 200 },
+            { type: 'output', text: ' NOSOTROS te contactaremos."', delay: 200 },
+            { type: 'output', text: '', delay: 300 },
+            { type: 'output', text: '     - JAJA Red Team Operations', delay: 300 },
+            { type: 'output', text: '', delay: 500 },
+            
+            { type: 'prompt', text: 'root@jaja-sys:~#', delay: 100 },
+            { type: 'cursor', text: '', delay: 0 }
+        ];
+        
+        let terminalIndex = 0;
+        const terminalBody = document.getElementById('terminalBody');
+        
+        function typeTerminal() {
+            if (terminalIndex < terminalCommands.length) {
+                const cmd = terminalCommands[terminalIndex];
+                const line = document.createElement('div');
+                line.className = 'terminal-line';
+                
+                if (cmd.type === 'prompt') {
+                    line.innerHTML = `<span class="terminal-prompt">${cmd.text}</span>`;
+                } else if (cmd.type === 'command') {
+                    line.innerHTML = `<span class="terminal-command">${cmd.text}</span>`;
+                } else if (cmd.type === 'success') {
+                    line.innerHTML = `<span class="terminal-success">${cmd.text}</span>`;
+                } else if (cmd.type === 'error') {
+                    line.innerHTML = `<span class="terminal-error">${cmd.text}</span>`;
+                } else if (cmd.type === 'warning') {
+                    line.innerHTML = `<span class="terminal-warning">${cmd.text}</span>`;
+                } else if (cmd.type === 'cursor') {
+                    line.innerHTML = `<span class="terminal-cursor"></span>`;
+                } else {
+                    line.innerHTML = `<span class="terminal-output">${cmd.text}</span>`;
+                }
+                
+                terminalBody.appendChild(line);
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+                terminalIndex++;
+                
+                // Cambiar modos según comandos
+                if (cmd.type === 'warning' || cmd.type === 'error') {
+                    changeMode('warning');
+                    setTimeout(() => changeMode('secure'), 2000);
+                }
+                
+                setTimeout(typeTerminal, cmd.delay);
+            }
+        }
+        
+        function startTerminal() {
+            terminalBody.innerHTML = '';
+            terminalIndex = 0;
+            setTimeout(typeTerminal, 500);
+        }
+        
+        // ============================================
+        // EASTER EGGS
+        // ============================================
+        
+        // KONAMI CODE
+        document.addEventListener('keydown', (e) => {
+            konamiSequence.push(e.key);
+            konamiSequence = konamiSequence.slice(-10);
+            
+            if (konamiSequence.join('') === konamiCode.join('')) {
+                showEasterEgg('konami');
+            }
+        });
+        
+        // CLICK 7 VECES EN LOGO
+        let logoClicks = 0;
+        document.querySelector('.logo').addEventListener('click', () => {
+            logoClicks++;
+            if (logoClicks === 7) {
+                showEasterEgg('logo');
+                logoClicks = 0;
+            }
+        });
+        
+        // ESCRIBIR "REDTEAM" EN CUALQUIER LADO
+        let typedSequence = '';
+        document.addEventListener('keypress', (e) => {
+            typedSequence += e.key.toLowerCase();
+            typedSequence = typedSequence.slice(-7);
+            
+            if (typedSequence === 'redteam') {
+                showEasterEgg('redteam');
+                typedSequence = '';
+            }
+        });
+        
+        function showEasterEgg(type) {
+            const easterEggBox = document.getElementById('easterEggBox');
+            const easterEggContent = document.getElementById('easterEggContent');
+            
+            let content = '';
+            
+            if (type === 'konami') {
+                changeMode('danger');
+                content = `
+                    <h3>[ KONAMI CODE DETECTADO ]</h3>
+                    <p>Has desbloqueado el modo RED PANIC.</p>
+                    <pre style="color: var(--danger);">
+╔═══════════════════════════════════════╗
+║  ⚠ RED TEAM MODE ACTIVATED ⚠         ║
+║                                       ║
+║  Todos los sistemas comprometidos.    ║
+║  Acceso total concedido.              ║
+║  Protocolos de seguridad: OFFLINE    ║
+║                                       ║
+║  "Con gran poder viene gran           ║
+║   responsabilidad" - Spider-Man       ║
+╚═══════════════════════════════════════╝
+                    </pre>
+                `;
+                setTimeout(() => changeMode('secure'), 10000);
+            } else if (type === 'logo') {
+                content = `
+                    <h3>[ PERSISTENT HACKER DETECTED ]</h3>
+                    <p>7 clicks en el logo... claramente sabes lo que haces.</p>
+                    <pre style="color: var(--primary);">
+╔═══════════════════════════════════════╗
+║                                       ║
+║  "La persistencia es la clave del     ║
+║   éxito en pentesting. Has demostrado ║
+║   que tienes lo que se necesita."     ║
+║                                       ║
+║  - Julián Juárez, Red Team Operative  ║
+║                                       ║
+╚═══════════════════════════════════════╝
+                    </pre>
+                `;
+            } else if (type === 'redteam') {
+                changeMode('warning');
+                content = `
+                    <h3>[ RED TEAM CREDENTIALS VERIFIED ]</h3>
+                    <p>Has escrito la palabra clave. Acceso elevado concedido.</p>
+                    <pre style="color: var(--warning);">
+╔═══════════════════════════════════════╗
+║  CLEARANCE LEVEL: 5                   ║
+║  ACCESS: UNRESTRICTED                 ║
+║                                       ║
+║  Proyectos clasificados desbloqueados:║
+║  • A2U Project (Acerta/SAT)           ║
+║  • Red Team Operations Archive        ║
+║  • Big Data Intelligence Reports      ║
+║                                       ║
+╚═══════════════════════════════════════╝
+                    </pre>
+                `;
+                setTimeout(() => changeMode('secure'), 10000);
+            }
+            
+            easterEggContent.innerHTML = content;
+            easterEggBox.classList.add('show');
+        }
+        
+        function closeEasterEgg() {
+            document.getElementById('easterEggBox').classList.remove('show');
+            changeMode('secure');
+        }
+        
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // ============================================
+        // CONSOLE EASTER EGG
+        // ============================================
+        console.log('%c╔═══════════════════════════════════════════════════════════════════╗', 'color: #ff0040; font-family: monospace; font-size: 12px;');
+        console.log('%c║  ⚠ RED TEAM OPERATIVE CONSOLE DETECTED ⚠                        ║', 'color: #ff0040; font-family: monospace; font-size: 12px;');
+        console.log('%c║                                                                   ║', 'color: #ff0040; font-family: monospace; font-size: 12px;');
+        console.log('%c║  Operative: Julián Alexander Juárez Alvarado                     ║', 'color: #00ff41; font-family: monospace; font-size: 12px;');
+        console.log('%c║  Clearance: Level 5 - RED HAT CERTIFIED                          ║', 'color: #00ff41; font-family: monospace; font-size: 12px;');
+        console.log('%c║  Status: ACTIVE | Projects: CATALYST, A2U, Red Team Ops          ║', 'color: #00ff41; font-family: monospace; font-size: 12px;');
+        console.log('%c║                                                                   ║', 'color: #ff0040; font-family: monospace; font-size: 12px;');
+        console.log('%c║  "Si no quieres que te ataquemos, NOSOTROS te contactaremos"    ║', 'color: #ff6600; font-family: monospace; font-size: 12px;');
+        console.log('%c║                                                                   ║', 'color: #ff0040; font-family: monospace; font-size: 12px;');
+        console.log('%c║  Easter Eggs disponibles:                                         ║', 'color: #00d9ff; font-family: monospace; font-size: 12px;');
+        console.log('%c║  • Konami Code: ↑↑↓↓←→←→BA                                       ║', 'color: #00d9ff; font-family: monospace; font-size: 12px;');
+        console.log('%c║  • Escribe "redteam" en cualquier lugar                          ║', 'color: #00d9ff; font-family: monospace; font-size: 12px;');
+        console.log('%c║  • Haz click 7 veces en el logo                                   ║', 'color: #00d9ff; font-family: monospace; font-size: 12px;');
+        console.log('%c╚═══════════════════════════════════════════════════════════════════╝', 'color: #ff0040; font-family: monospace; font-size: 12px;');
+        
+        // Password hint
+        console.log('%c\nHINT: La contraseña está relacionada con el nombre del proyecto principal... 🤔', 'color: #00ff41; font-style: italic;');
+    </script>
+</body>
+</html>
