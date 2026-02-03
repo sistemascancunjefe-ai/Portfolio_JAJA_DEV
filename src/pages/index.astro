@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SemanticGraph from '../components/SemanticGraph';
+import MatrixBackground from '../components/MatrixBackground.astro';
+---
+
+<Layout title="JAJA.DEV | Semantic Nexus">
+  <main class="relative h-screen overflow-hidden">
+    <MatrixBackground />
+    <SemanticGraph client:only="react" />
+
+    <!-- Branding Overlay -->
+    <div class="absolute top-8 left-8 z-10">
+      <div class="text-2xl font-black tracking-tighter">
+        <span class="text-blue-500">JAJA</span><span class="text-orange-500">.DEV</span>
+      </div>
+    </div>
+
+    <!-- Navigation Prompt -->
+    <div class="absolute top-8 right-8 z-10 flex gap-6">
+      <a href="/portfolio" class="text-gray-400 hover:text-white transition-colors font-mono text-sm uppercase tracking-widest border-b border-white/10 pb-1">
+        Direct Access [Portfolio]
+      </a>
+    </div>
+
+    <!-- Instructions -->
+    <div class="absolute bottom-8 right-8 z-10 text-right pointer-events-none">
+      <p class="text-[10px] text-gray-600 font-mono uppercase tracking-[0.2em] mb-2">System Status: Operational</p>
+      <p class="text-[10px] text-teal-500/50 font-mono uppercase tracking-[0.2em]">Interact with nodes to explore semantic links</p>
+    </div>
+  </main>
+</Layout>
