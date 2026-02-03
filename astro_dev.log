@@ -1,0 +1,13 @@
+20:11:36 [types] Generated 1ms
+20:11:36 [content] Syncing content
+20:11:36 [content] Synced content
+20:11:36 [vite] Re-optimizing dependencies because vite config has changed
+
+ astro  v5.17.1 ready in 581 ms
+
+┃ Local    http://localhost:4321/
+┃ Network  use --host to expose
+
+20:11:36 watching for file changes...
+20:11:58 [200] / 193ms
+20:12:07 [200] /portfolio 9ms
