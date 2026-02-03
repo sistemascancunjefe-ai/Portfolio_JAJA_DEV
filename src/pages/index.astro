@@ -2,12 +2,20 @@
 import Layout from '../layouts/Layout.astro';
 import SemanticGraph from '../components/SemanticGraph';
 import MatrixBackground from '../components/MatrixBackground.astro';
+import { getCollection } from 'astro:content';
+import { transformNexusData } from '../utils/nexusDataTransformer';
+
+const projects = await getCollection('projects');
+const tech = await getCollection('tech');
+const categories = await getCollection('categories');
+
+const { nodes, links } = transformNexusData(projects, tech, categories);
 ---
 
 <Layout title="JAJA.DEV | Semantic Nexus">
   <main class="relative h-screen overflow-hidden">
     <MatrixBackground />
-    <SemanticGraph client:only="react" />
+    <SemanticGraph client:only="react" initialNodes={nodes} initialLinks={links} />
 
     <!-- Branding Overlay -->
     <div class="absolute top-8 left-8 z-10">

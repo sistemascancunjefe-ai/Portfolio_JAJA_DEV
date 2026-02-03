@@ -1,0 +1,8 @@
+{
+  "name": "A2U Project",
+  "subtitle": "Classified Operation",
+  "description": "Proyecto clasificado de inteligencia de datos y automatización avanzada (Acerta/SAT).",
+  "category": "projects",
+  "techStack": ["python"],
+  "inDevelopment": true
+}
