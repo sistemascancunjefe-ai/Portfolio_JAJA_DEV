@@ -1,0 +1,12 @@
+{
+  "name": "SQL Maestro",
+  "subtitle": "Query Optimization Lab",
+  "description": "Repositorio consolidado y optimizado de consultas SQL enterprise-grade.",
+  "category": "projects",
+  "metrics": [
+    { "label": "Reducción Archivos", "value": "90%", "weight": 50 },
+    { "label": "Optimización", "value": "24%", "weight": 40 }
+  ],
+  "techStack": ["sql", "db2"],
+  "inDevelopment": false
+}

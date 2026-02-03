@@ -1,0 +1,13 @@
+{
+  "name": "Validador v5.0",
+  "subtitle": "Validation Engine",
+  "description": "Dashboard profesional para validación masiva de datos con precisión extrema.",
+  "category": "projects",
+  "metrics": [
+    { "label": "Reducción Tiempo", "value": "85-90%", "weight": 80 },
+    { "label": "Precisión", "value": "99%+", "weight": 70 },
+    { "label": "Ahorro Mensual", "value": "50h/analista", "weight": 60 }
+  ],
+  "techStack": ["react", "tailwind", "python", "pandas"],
+  "inDevelopment": false
+}

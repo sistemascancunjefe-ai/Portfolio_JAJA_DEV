@@ -1,0 +1,13 @@
+{
+  "name": "SAC",
+  "subtitle": "Sistema de Automatización Completa",
+  "description": "Ecosistema de 5 módulos para automatización end-to-end de procesos logísticos.",
+  "category": "projects",
+  "metrics": [
+    { "label": "ROI", "value": "3,411%", "weight": 100 },
+    { "label": "Ahorro Anual", "value": "5.1M MXN", "weight": 90 },
+    { "label": "Payback", "value": "10 días", "weight": 50 }
+  ],
+  "techStack": ["python", "fastapi", "db2", "react"],
+  "inDevelopment": false
+}
