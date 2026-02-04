@@ -1,0 +1,7 @@
+services:
+  - type: static
+    name: Portfolio_JAJA_DEV
+    repo: https://github.com/sistemascancunjefe-ai/Portfolio_JAJA_DEV
+    branch: main
+    buildCommand: bun run build
+    publishPath: dist
