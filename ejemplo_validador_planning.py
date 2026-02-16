@@ -13,6 +13,7 @@ Este módulo demuestra las capacidades de automatización mediante:
 - Sistema de alertas por criticidad
 """
 
+import os
 import pandas as pd
 import pyodbc
 from datetime import datetime
@@ -332,8 +333,24 @@ class ValidadorPlanning:
 
 
 # ═══════════════════════════════════════════════════════════════
-# EJEMPLO DE USO
+# CONFIGURACIÓN Y EJEMPLO DE USO
 # ═══════════════════════════════════════════════════════════════
+
+def get_db_config() -> Dict[str, str]:
+    """
+    Obtiene la configuración de la base de datos desde variables de entorno.
+
+    Returns:
+        Dict con credenciales de base de datos
+    """
+    return {
+        'host': os.getenv('DB_HOST', 'your_host_here'),
+        'port': os.getenv('DB_PORT', '50000'),
+        'database': os.getenv('DB_DATABASE', 'your_database_here'),
+        'user': os.getenv('DB_USER', 'your_user_here'),
+        'password': os.getenv('DB_PASSWORD', 'your_password_here')
+    }
+
 
 def ejemplo_uso():
     """
@@ -346,14 +363,8 @@ def ejemplo_uso():
     print("=" * 70)
     print()
     
-    # Configuración de base de datos (ejemplo)
-    db_config = {
-        'host': 'LG001BK.CHEDRAUI.COM.MX',
-        'port': '50000',
-        'database': 'WM260BASD',
-        'user': 'usuario_sistemas',
-        'password': '********'
-    }
+    # Configuración de base de datos (cargada de variables de entorno)
+    db_config = get_db_config()
     
     # Crear validador
     validador = ValidadorPlanning(db_config)
