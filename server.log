@@ -11,3 +11,6 @@ $ astro dev
 
 20:02:17 watching for file changes...
 20:03:19 [200] /portfolio 526ms
+20:12:04 [watch] src/pages/portfolio.astro
+20:12:04 [watch] src/pages/portfolio.astro
+20:14:00 [200] /portfolio 306ms
