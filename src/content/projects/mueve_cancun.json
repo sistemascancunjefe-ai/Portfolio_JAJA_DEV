@@ -1,0 +1,10 @@
+{
+  "name": "MueveCancun",
+  "subtitle": "Urban Mobility Platform",
+  "description": "Plataforma integral para la gestión y optimización de la movilidad en Cancún.",
+  "category": "projects",
+  "metrics": [],
+  "techStack": ["react", "tailwind", "git"],
+  "link": "https://github.com/JULIANJUAREZMX01/MueveCancun",
+  "inDevelopment": true
+}
