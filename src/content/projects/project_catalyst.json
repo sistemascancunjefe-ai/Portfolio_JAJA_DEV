@@ -1,0 +1,10 @@
+{
+  "name": "PROJECT_CATALYST",
+  "subtitle": "Innovation Catalyst",
+  "description": "Iniciativa para impulsar proyectos tecnológicos y de innovación.",
+  "category": "projects",
+  "metrics": [],
+  "techStack": ["git"],
+  "link": "https://github.com/sistemascancunjefe-ai/PROJECT_CATALYST",
+  "inDevelopment": true
+}

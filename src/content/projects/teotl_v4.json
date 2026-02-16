@@ -1,0 +1,10 @@
+{
+  "name": "Teotl-V4",
+  "subtitle": "Advanced AI System",
+  "description": "Cuarta iteración del sistema de inteligencia artificial Teotl.",
+  "category": "projects",
+  "metrics": [],
+  "techStack": ["python", "git"],
+  "link": "https://github.com/sistemascancunjefe-ai/Teotl-V4",
+  "inDevelopment": true
+}

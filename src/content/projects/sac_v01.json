@@ -1,0 +1,10 @@
+{
+  "name": "SAC V01",
+  "subtitle": "System Administration Control",
+  "description": "Sistema de administración y control para entornos corporativos.",
+  "category": "projects",
+  "metrics": [],
+  "techStack": ["git"],
+  "link": "https://github.com/sistemascancunjefe-ai/SAC_V01_427_ADMJAJA",
+  "inDevelopment": true
+}
