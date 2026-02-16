@@ -9,6 +9,8 @@ interface Props {
   isLowPerformance: boolean;
 }
 
+const CHROMATIC_ABERRATION_OFFSET = new Vector2(0.005, 0.005);
+
 const PostProcessingOverlay: React.FC<Props> = ({ isDeepDive, isLowPerformance }) => {
   if (!isDeepDive) return null;
 
@@ -22,7 +24,7 @@ const PostProcessingOverlay: React.FC<Props> = ({ isDeepDive, isLowPerformance }
         <EffectComposer disableNormalPass>
           <ChromaticAberration
             blendFunction={BlendFunction.NORMAL}
-            offset={new Vector2(0.005, 0.005)}
+            offset={CHROMATIC_ABERRATION_OFFSET}
           />
           {!isLowPerformance && (
             <Noise opacity={0.15} blendFunction={BlendFunction.SOFT_LIGHT} />
