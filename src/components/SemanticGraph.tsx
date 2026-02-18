@@ -16,7 +16,6 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedNode, setSelectedNode] = useState<NexusNode | null>(null);
   const [hoveredNode, setHoveredNode] = useState<NexusNode | null>(null);
-  const [expansionTimer, setExpansionTimer] = useState<NodeJS.Timeout | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [simulation, setSimulation] = useState<d3.Simulation<any, undefined> | null>(null);
   const [corePos, setCorePos] = useState({ x: 0, y: 0 });
@@ -90,6 +89,8 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
       .attr('stroke-dasharray', (d: any) => d.target.category === 'ghost' ? '5,5' : 'none')
       .attr('stroke-width', d => Math.sqrt(d.value) * 1.5);
 
+    let hoverTimer: any;
+
     const node = svg.append('g')
       .selectAll('g')
       .data(initialNodes)
@@ -97,10 +98,11 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
       .attr('cursor', 'pointer')
       .on('mouseenter', (event, d) => {
         setHoveredNode(d);
-        const timer = setTimeout(() => {
+
+        if (hoverTimer) clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(() => {
           handleDeepDive(d);
         }, 7000);
-        setExpansionTimer(timer);
 
         d3.select(event.currentTarget).select('circle')
           .transition().duration(300)
@@ -109,8 +111,8 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
       })
       .on('mouseleave', (event, d) => {
         setHoveredNode(null);
-        if (expansionTimer) clearTimeout(expansionTimer);
-        setExpansionTimer(null);
+        if (hoverTimer) clearTimeout(hoverTimer);
+        hoverTimer = null;
 
         if (!isExpanded) {
           d3.select(event.currentTarget).select('circle')
@@ -120,6 +122,7 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
         }
       })
       .on('click', (event, d) => {
+        event.stopPropagation();
         handleDeepDive(d);
       })
       .call(d3.drag<any, any>()
@@ -343,15 +346,27 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
                     </div>
                   )}
 
-                  <button
-                    onClick={() => {
-                        if (selectedNode.id === 'jaja_dev') handleSystemBreach();
-                        else closeDeepDive();
-                    }}
-                    className="w-full bg-white text-black font-black py-5 rounded-2xl hover:bg-teal-400 transition-colors uppercase tracking-widest text-sm"
-                  >
-                    {selectedNode.id === 'jaja_dev' ? 'Breach Portfolio' : 'Close Analysis'}
-                  </button>
+                  <div className="flex gap-4">
+                    {selectedNode.link && (
+                      <a
+                        href={selectedNode.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-teal-500 text-black font-black py-5 rounded-2xl hover:bg-teal-400 transition-colors uppercase tracking-widest text-sm flex items-center justify-center"
+                      >
+                        Launch
+                      </a>
+                    )}
+                    <button
+                      onClick={() => {
+                          if (selectedNode.id === 'jaja_dev') handleSystemBreach();
+                          else closeDeepDive();
+                      }}
+                      className="flex-1 bg-white text-black font-black py-5 rounded-2xl hover:bg-gray-200 transition-colors uppercase tracking-widest text-sm"
+                    >
+                      {selectedNode.id === 'jaja_dev' ? 'Breach Portfolio' : 'Close Analysis'}
+                    </button>
+                  </div>
                 </div>
               </div>
 

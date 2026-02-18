@@ -76,7 +76,7 @@ export function transformNexusData(
       category: 'project',
       metrics: p.data.metrics,
       techStack: p.data.techStack?.map(ref => ref.id),
-      inDevelopment: p.data.inDevelopment,
+      inDevelopment: p.data.inDevelopment, link: p.data.link,
       mass: mass,
     });
 

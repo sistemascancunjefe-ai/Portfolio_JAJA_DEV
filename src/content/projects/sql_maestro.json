@@ -1,12 +1,13 @@
 {
   "name": "SQL Maestro",
   "subtitle": "Query Optimization Lab",
-  "description": "Repositorio consolidado y optimizado de consultas SQL enterprise-grade.",
+  "description": "Repositorio consolidado y optimizado de consultas SQL enterprise-grade. Consolidación de 29 queries en 22 optimizadas y documentación completa.",
   "category": "projects",
   "metrics": [
-    { "label": "Reducción Archivos", "value": "90%", "weight": 50 },
-    { "label": "Optimización", "value": "24%", "weight": 40 }
+    { "label": "Reducción Archivos", "value": "90%", "weight": 60 },
+    { "label": "Optimización", "value": "24%", "weight": 50 },
+    { "label": "Mantenimiento", "value": "-80%", "weight": 40 }
   ],
-  "techStack": ["sql", "db2"],
+  "techStack": ["sql", "db2", "git"],
   "inDevelopment": false
 }

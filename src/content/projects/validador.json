@@ -1,12 +1,12 @@
 {
   "name": "Validador v5.0",
   "subtitle": "Validation Engine",
-  "description": "Dashboard profesional para validación masiva de datos con precisión extrema.",
+  "description": "Dashboard profesional para validación masiva de datos con precisión extrema. Reduce validación de 2-3 horas a 15-20 minutos con sistema de alertas por criticidad.",
   "category": "projects",
   "metrics": [
-    { "label": "Reducción Tiempo", "value": "85-90%", "weight": 80 },
-    { "label": "Precisión", "value": "99%+", "weight": 70 },
-    { "label": "Ahorro Mensual", "value": "50h/analista", "weight": 60 }
+    { "label": "Reducción Tiempo", "value": "85-90%", "weight": 90 },
+    { "label": "Precisión", "value": "99%+", "weight": 80 },
+    { "label": "Ahorro Mensual", "value": "50h/analista", "weight": 70 }
   ],
   "techStack": ["react", "tailwind", "python", "pandas"],
   "inDevelopment": false
