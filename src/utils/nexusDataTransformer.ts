@@ -27,6 +27,9 @@ export function transformNexusData(
   const nodes: NexusNode[] = [];
   const links: NexusLink[] = [];
 
+  // Track created category IDs to prevent duplicates and manage defaults
+  const createdCategoryIds = new Set<string>();
+
   // 1. Core Node
   nodes.push({
     id: 'jaja_dev',
@@ -39,15 +42,30 @@ export function transformNexusData(
 
   // 2. Categories
   categories.forEach(cat => {
+    const nodeId = `cat_${cat.id}`;
     nodes.push({
-      id: `cat_${cat.id}`,
+      id: nodeId,
       name: cat.data.name,
       category: 'category',
       mass: 80,
     });
+    createdCategoryIds.add(nodeId);
     // Connect categories to core
-    links.push({ source: 'jaja_dev', target: `cat_${cat.id}`, value: 2 });
+    links.push({ source: 'jaja_dev', target: nodeId, value: 2 });
   });
+
+  // Ensure 'cat_tech' exists for technologies if not already present
+  // This prevents orphaned tech nodes if 'tech' category is missing from input
+  if (!createdCategoryIds.has('cat_tech')) {
+      nodes.push({
+          id: 'cat_tech',
+          name: 'Technologies',
+          category: 'category',
+          mass: 80
+      });
+      createdCategoryIds.add('cat_tech');
+      links.push({ source: 'jaja_dev', target: 'cat_tech', value: 2 });
+  }
 
   // 3. Technologies
   tech.forEach(t => {
@@ -57,7 +75,7 @@ export function transformNexusData(
       category: 'tech',
       mass: 40,
     });
-    // Connect tech to its generic category if it existed, but here we'll connect them to a general 'tech' category
+    // Connect tech to its generic category
     links.push({ source: 'cat_tech', target: `tech_${t.id}`, value: 1 });
   });
 
@@ -81,7 +99,27 @@ export function transformNexusData(
     });
 
     // Connect project to its category
-    links.push({ source: `cat_${p.data.category.id}`, target: `project_${p.id}`, value: 2 });
+    // Robust handling for missing categories
+    let categoryId = 'uncategorized';
+    if (p.data.category && p.data.category.id) {
+        categoryId = p.data.category.id;
+    }
+
+    const categoryNodeId = `cat_${categoryId}`;
+
+    // If the category node doesn't exist (e.g., 'uncategorized' or a bad reference), create it
+    if (!createdCategoryIds.has(categoryNodeId)) {
+        nodes.push({
+            id: categoryNodeId,
+            name: categoryId === 'uncategorized' ? 'Uncategorized' : categoryId,
+            category: 'category',
+            mass: 80
+        });
+        createdCategoryIds.add(categoryNodeId);
+        links.push({ source: 'jaja_dev', target: categoryNodeId, value: 2 });
+    }
+
+    links.push({ source: categoryNodeId, target: `project_${p.id}`, value: 2 });
 
     // Connect project to its technologies
     p.data.techStack?.forEach(tRef => {
@@ -91,7 +129,9 @@ export function transformNexusData(
 
   // 5. Ghost Nodes (1.5x Expansion Rule)
   // n real projects -> 0.5n ghost nodes
-  const ghostCount = Math.floor(projects.length * 0.5);
+  // Used Math.ceil to ensure at least one ghost node exists if there are projects
+  const ghostCount = projects.length > 0 ? Math.ceil(projects.length * 0.5) : 0;
+
   const ghostNames = [
     'Project X-RAY', 'Neural Engine', 'Quantum Bridge', 'Cyber Sentinel',
     'Data Vortex', 'Nexus Core v2', 'Shadow Protocol', 'Edge Intelligence'
@@ -112,11 +152,13 @@ export function transformNexusData(
     });
 
     // Semantic link: connect to a real project as expansion module
-    links.push({
-      source: `project_${targetProject.id}`,
-      target: ghostId,
-      value: 1
-    });
+    if (targetProject) {
+        links.push({
+            source: `project_${targetProject.id}`,
+            target: ghostId,
+            value: 1
+        });
+    }
   }
 
   return { nodes, links };
