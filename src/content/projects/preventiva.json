@@ -1,12 +1,13 @@
 {
   "name": "Validación Preventiva",
   "subtitle": "Proactive Intelligence",
-  "description": "Cambio de paradigma: detección de problemas 5 días antes del recibo físico.",
+  "description": "Cambio de paradigma: de reactivo a preventivo. Detección de problemas 5 días antes del recibo físico mediante análisis de datos de citas de Planning.",
   "category": "projects",
   "metrics": [
-    { "label": "Anticipación", "value": "5 días", "weight": 70 },
-    { "label": "Prevención", "value": "100%", "weight": 85 }
+    { "label": "Anticipación", "value": "5 días", "weight": 80 },
+    { "label": "Prevención", "value": "100%", "weight": 90 },
+    { "label": "Costo Errores", "value": "-bash", "weight": 70 }
   ],
-  "techStack": ["python", "sql", "db2"],
+  "techStack": ["python", "sql", "db2", "pandas"],
   "inDevelopment": false
 }

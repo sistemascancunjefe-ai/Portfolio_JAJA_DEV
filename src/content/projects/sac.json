@@ -1,13 +1,14 @@
 {
   "name": "SAC",
   "subtitle": "Sistema de Automatización Completa",
-  "description": "Ecosistema de 5 módulos para automatización end-to-end de procesos logísticos.",
+  "description": "Ecosistema de 5 módulos para automatización end-to-end de procesos logísticos. Eliminación de intervención manual en validaciones, monitoreo en tiempo real con alertas inteligentes y generación automática de reportes.",
   "category": "projects",
   "metrics": [
     { "label": "ROI", "value": "3,411%", "weight": 100 },
     { "label": "Ahorro Anual", "value": "5.1M MXN", "weight": 90 },
-    { "label": "Payback", "value": "10 días", "weight": 50 }
+    { "label": "Payback", "value": "10 días", "weight": 80 },
+    { "label": "Escalabilidad", "value": "5 CEDIS", "weight": 60 }
   ],
-  "techStack": ["python", "fastapi", "db2", "react"],
+  "techStack": ["python", "fastapi", "db2", "react", "pandas"],
   "inDevelopment": false
 }

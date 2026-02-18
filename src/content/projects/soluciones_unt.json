@@ -1,0 +1,10 @@
+{
+  "name": "SolucionesUNT",
+  "subtitle": "Soluciones Tecnológicas Integrales",
+  "description": "Desarrollo de Software, Soporte Técnico y Consultoría para empresas en crecimiento. Ofrecemos soluciones personalizadas para optimizar procesos y mejorar la eficiencia operativa.",
+  "category": "apps",
+  "metrics": [],
+  "techStack": ["react", "javascript", "sql"],
+  "link": "https://www.facebook.com/SolucionesUNT/",
+  "inDevelopment": false
+}
