@@ -21,15 +21,10 @@ const techDetails = await Promise.all(
   })
 );
 
-// Map project to mockup component
-const mockupComponents = {
-  'sac': SacDashboard,
-  'sac_v01': SacDashboard,
-  'validador': ValidadorDashboard,
-  'mueve_cancun': RouteMap,
-};
-
-const MockupComponent = mockupComponents[project.id as keyof typeof mockupComponents];
+// Determine which mockup to show
+const showSacDashboard = project.id === 'sac' || project.id === 'sac_v01';
+const showValidadorDashboard = project.id === 'validador';
+const showRouteMap = project.id === 'mueve_cancun';
 ---
 
 <Layout title={`${project.data.name} | JAJA.DEV`}>
@@ -77,12 +72,14 @@ const MockupComponent = mockupComponents[project.id as keyof typeof mockupCompon
       )}
 
       {/* Interactive Mockup */}
-      {MockupComponent && (
+      {(showSacDashboard || showValidadorDashboard || showRouteMap) && (
         <div class="mb-12">
           <h2 class="text-2xl font-bold mb-6 font-mono">
             <span class="text-green-500">[</span> DEMO INTERACTIVO <span class="text-green-500">]</span>
           </h2>
-          <MockupComponent client:load />
+          {showSacDashboard && <SacDashboard client:load />}
+          {showValidadorDashboard && <ValidadorDashboard client:load />}
+          {showRouteMap && <RouteMap client:load />}
         </div>
       )}
 
