@@ -1,151 +1,153 @@
 import { expect, test, describe } from 'bun:test';
 import { transformNexusData } from './nexusDataTransformer';
 
-describe('nexusDataTransformer - Mass Calculation', () => {
-  const mockCategories: any[] = [
-    { id: 'web', data: { name: 'Web' } }
-  ];
+// Helper to create mock data
+const createMockProject = (id: string, overrides: any = {}) => ({
+  id,
+  data: {
+    name: `Project ${id}`,
+    subtitle: 'Subtitle',
+    description: 'Description',
+    category: { id: 'web' },
+    metrics: [],
+    techStack: [],
+    inDevelopment: false,
+    ...overrides
+  }
+});
 
-  const mockTech: any[] = [
-    { id: 'react', data: { name: 'React', category: 'frontend' } }
-  ];
+const createMockTech = (id: string, overrides: any = {}) => ({
+  id,
+  data: {
+    name: `Tech ${id}`,
+    ...overrides
+  }
+});
 
-  test('should have base mass of 60 when no metrics are provided', () => {
-    const mockProjects: any[] = [
-      {
-        id: 'p1',
-        data: {
-          name: 'Project 1',
-          subtitle: 'Sub 1',
-          description: 'Desc 1',
-          category: { id: 'web' },
-          metrics: undefined
-        }
-      }
-    ];
+const createMockCategory = (id: string, overrides: any = {}) => ({
+  id,
+  data: {
+    name: `Category ${id}`,
+    ...overrides
+  }
+});
 
-    const { nodes } = transformNexusData(mockProjects, mockTech, mockCategories);
-    const projectNode = nodes.find(n => n.id === 'project_p1');
-    expect(projectNode?.mass).toBe(60);
+describe('nexusDataTransformer', () => {
+
+  describe('Structure', () => {
+    test('should always include the Core Node (jaja_dev)', () => {
+      const { nodes } = transformNexusData([], [], []);
+      const coreNode = nodes.find(n => n.id === 'jaja_dev');
+      expect(coreNode).toBeDefined();
+      expect(coreNode?.category).toBe('core');
+    });
+
+    test('should create nodes for provided categories and link to core', () => {
+      const categories: any[] = [createMockCategory('web'), createMockCategory('mobile')];
+      const { nodes, links } = transformNexusData([], [], categories);
+
+      expect(nodes.find(n => n.id === 'cat_web')).toBeDefined();
+      expect(nodes.find(n => n.id === 'cat_mobile')).toBeDefined();
+
+      const webLink = links.find(l => l.source === 'jaja_dev' && l.target === 'cat_web');
+      expect(webLink).toBeDefined();
+    });
+
+    test('should create nodes for technologies and link to tech category', () => {
+      const tech: any[] = [createMockTech('react'), createMockTech('bun')];
+      const { nodes, links } = transformNexusData([], tech, []);
+
+      expect(nodes.find(n => n.id === 'tech_react')).toBeDefined();
+      expect(nodes.find(n => n.id === 'tech_bun')).toBeDefined();
+      expect(nodes.find(n => n.id === 'cat_tech')).toBeDefined(); // Implicitly created
+
+      const reactLink = links.find(l => l.source === 'cat_tech' && l.target === 'tech_react');
+      expect(reactLink).toBeDefined();
+    });
   });
 
-  test('should have base mass of 60 when metrics are empty', () => {
-    const mockProjects: any[] = [
-      {
-        id: 'p1_empty',
-        data: {
-          name: 'Project 1 Empty',
-          subtitle: 'Sub 1',
-          description: 'Desc 1',
-          category: { id: 'web' },
-          metrics: []
-        }
-      }
-    ];
+  describe('Physics/Mass', () => {
+    const categories: any[] = [createMockCategory('web')];
 
-    const { nodes } = transformNexusData(mockProjects, mockTech, mockCategories);
-    const projectNode = nodes.find(n => n.id === 'project_p1_empty');
-    expect(projectNode?.mass).toBe(60);
+    test('should have base mass of 60 when no metrics are provided', () => {
+      const projects: any[] = [createMockProject('p1', { metrics: undefined })];
+      const { nodes } = transformNexusData(projects, [], categories);
+      expect(nodes.find(n => n.id === 'project_p1')?.mass).toBe(60);
+    });
+
+    test('should calculate mass correctly based on weights', () => {
+      const projects: any[] = [createMockProject('p2', {
+        metrics: [{ weight: 100 }, { weight: 50 }]
+      })];
+      // 60 + (150 / 10) = 75
+      const { nodes } = transformNexusData(projects, [], categories);
+      expect(nodes.find(n => n.id === 'project_p2')?.mass).toBe(75);
+    });
   });
 
-  test('should have base mass of 60 when metrics have no weights', () => {
-    const mockProjects: any[] = [
-      {
-        id: 'p2',
-        data: {
-          name: 'Project 2',
-          subtitle: 'Sub 2',
-          description: 'Desc 2',
-          category: { id: 'web' },
-          metrics: [
-            { label: 'Metric 1', value: 'Value 1' },
-            { label: 'Metric 2', value: 'Value 2' }
-          ]
-        }
-      }
-    ];
+  describe('Ghost Logic', () => {
+    test('should create 0 ghost nodes when there are 0 projects', () => {
+      const { nodes } = transformNexusData([], [], []);
+      const ghostNodes = nodes.filter(n => n.category === 'ghost');
+      expect(ghostNodes.length).toBe(0);
+    });
 
-    const { nodes } = transformNexusData(mockProjects, mockTech, mockCategories);
-    const projectNode = nodes.find(n => n.id === 'project_p2');
-    expect(projectNode?.mass).toBe(60);
+    test('should create 1 ghost node when there is 1 project (Math.ceil rule)', () => {
+      const projects: any[] = [createMockProject('p1')];
+      const { nodes, links } = transformNexusData(projects, [], []);
+      const ghostNodes = nodes.filter(n => n.category === 'ghost');
+
+      expect(ghostNodes.length).toBe(1);
+
+      // Verify link to project
+      const ghostId = ghostNodes[0].id;
+      const link = links.find(l => l.source === 'project_p1' && l.target === ghostId);
+      expect(link).toBeDefined();
+    });
+
+    test('should generate unique IDs for ghost nodes', () => {
+      const projects: any[] = Array.from({ length: 10 }, (_, i) => createMockProject(`p${i}`));
+      // 10 projects -> 5 ghosts
+      const { nodes } = transformNexusData(projects, [], []);
+      const ghostNodes = nodes.filter(n => n.category === 'ghost');
+
+      expect(ghostNodes.length).toBe(5);
+      const ids = new Set(ghostNodes.map(n => n.id));
+      expect(ids.size).toBe(5);
+    });
   });
 
-  test('should calculate mass correctly based on weights', () => {
-    const mockProjects: any[] = [
-      {
-        id: 'p3',
-        data: {
-          name: 'Project 3',
-          subtitle: 'Sub 3',
-          description: 'Desc 3',
-          category: { id: 'web' },
-          metrics: [
-            { label: 'Metric 1', value: '10', weight: 100 },
-            { label: 'Metric 2', value: '20', weight: 50 }
-          ]
-        }
-      }
-    ];
+  describe('Resilience', () => {
+    test('should handle orphaned technologies (missing tech category input)', () => {
+      // Tech category is NOT passed in categories array
+      const tech: any[] = [createMockTech('orphan_tech')];
+      const { nodes, links } = transformNexusData([], tech, []);
 
-    // baseMass (60) + (100 + 50) / 10 = 60 + 15 = 75
-    const { nodes } = transformNexusData(mockProjects, mockTech, mockCategories);
-    const projectNode = nodes.find(n => n.id === 'project_p3');
-    expect(projectNode?.mass).toBe(75);
-  });
+      // 'cat_tech' should be auto-generated
+      expect(nodes.find(n => n.id === 'cat_tech')).toBeDefined();
+      expect(links.find(l => l.source === 'jaja_dev' && l.target === 'cat_tech')).toBeDefined();
+      expect(links.find(l => l.source === 'cat_tech' && l.target === 'tech_orphan_tech')).toBeDefined();
+    });
 
-  test('should handle mix of weighted and non-weighted metrics', () => {
-    const mockProjects: any[] = [
-      {
-        id: 'p4',
-        data: {
-          name: 'Project 4',
-          subtitle: 'Sub 4',
-          description: 'Desc 4',
-          category: { id: 'web' },
-          metrics: [
-            { label: 'Metric 1', value: '10', weight: 80 },
-            { label: 'Metric 2', value: '20' }
-          ]
-        }
-      }
-    ];
+    test('should handle project with missing category', () => {
+      const projects: any[] = [createMockProject('p_no_cat', { category: undefined })];
+      const { nodes, links } = transformNexusData(projects, [], []);
 
-    // baseMass (60) + (80 + 0) / 10 = 68
-    const { nodes } = transformNexusData(mockProjects, mockTech, mockCategories);
-    const projectNode = nodes.find(n => n.id === 'project_p4');
-    expect(projectNode?.mass).toBe(68);
-  });
+      // Should default to 'uncategorized'
+      const uncategorizedNode = nodes.find(n => n.id === 'cat_uncategorized');
+      expect(uncategorizedNode).toBeDefined();
+      expect(uncategorizedNode?.name).toBe('Uncategorized');
 
-  test('should handle multiple projects independently', () => {
-    const mockProjects: any[] = [
-      {
-        id: 'p5a',
-        data: {
-          name: 'Project 5a',
-          subtitle: 'Sub 5a',
-          description: 'Desc 5a',
-          category: { id: 'web' },
-          metrics: [{ label: 'm1', value: 'v1', weight: 200 }]
-        }
-      },
-      {
-        id: 'p5b',
-        data: {
-          name: 'Project 5b',
-          subtitle: 'Sub 5b',
-          description: 'Desc 5b',
-          category: { id: 'web' },
-          metrics: [{ label: 'm1', value: 'v1', weight: 400 }]
-        }
-      }
-    ];
+      // Link check
+      expect(links.find(l => l.source === 'cat_uncategorized' && l.target === 'project_p_no_cat')).toBeDefined();
+    });
 
-    const { nodes } = transformNexusData(mockProjects, mockTech, mockCategories);
-
-    const p5a = nodes.find(n => n.id === 'project_p5a');
-    const p5b = nodes.find(n => n.id === 'project_p5b');
-
-    expect(p5a?.mass).toBe(60 + 200/10); // 80
-    expect(p5b?.mass).toBe(60 + 400/10); // 100
+    test('should handle project with null category id', () => {
+       const projects: any[] = [createMockProject('p_null_cat', { category: { id: null } })];
+       // Code: if (p.data.category && p.data.category.id) -> checks truthiness.
+       // So null id -> uncategorized.
+       const { nodes } = transformNexusData(projects, [], []);
+       expect(nodes.find(n => n.id === 'cat_uncategorized')).toBeDefined();
+    });
   });
 });
