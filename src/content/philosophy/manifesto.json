@@ -1,0 +1,13 @@
+{
+  "title": "Manifesto de Desarrollo",
+  "content": "Máquinas y sistemas al servicio de analistas, no analistas al servicio de máquinas. La tecnología debe amplificar el potencial humano, no reemplazarlo.",
+  "principles": [
+    "Automatización inteligente que elimina trabajo repetitivo",
+    "Sistemas que empoderan al usuario, no que lo limitan",
+    "Código limpio, mantenible y escalable",
+    "ROI medible en cada línea de código",
+    "Pragmatismo sobre perfeccionismo",
+    "Documentación como código",
+    "Testing como inversión, no como gasto"
+  ]
+}

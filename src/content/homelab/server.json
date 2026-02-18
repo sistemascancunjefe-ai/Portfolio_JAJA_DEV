@@ -1,0 +1,6 @@
+{
+  "component": "Servidor Principal",
+  "model": "Dell PowerEdge R720",
+  "specs": "2x Xeon E5-2670, 128GB RAM, 8TB Storage RAID 10",
+  "purpose": "Virtualización (Proxmox), Docker containers, CI/CD pipeline"
+}

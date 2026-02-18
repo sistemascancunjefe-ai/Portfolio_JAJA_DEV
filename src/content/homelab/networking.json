@@ -1,0 +1,6 @@
+{
+  "component": "Networking",
+  "model": "UniFi Dream Machine Pro",
+  "specs": "10Gbps switching, IDS/IPS, VLANs segregadas",
+  "purpose": "Segmentación de red, monitoreo de tráfico, firewall corporativo"
+}

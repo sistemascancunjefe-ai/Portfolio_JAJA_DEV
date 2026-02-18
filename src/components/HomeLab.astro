@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+
+const homelab = await getCollection('homelab');
+---
+
+<section id="homelab" class="py-24 px-8 bg-[#050810] border-t border-white/5">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-4xl font-bold mb-4 text-center font-mono">
+      <span class="text-green-500">[</span> HOMELAB INFRASTRUCTURE <span class="text-green-500">]</span>
+    </h2>
+    <p class="text-center text-gray-500 mb-12 font-mono text-sm">// Equipamiento de desarrollo y testing local</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {homelab.map((item) => (
+        <div class="bg-black/40 border border-green-500/30 p-6 hover:border-green-500 transition-all">
+          <div class="flex items-start justify-between mb-4">
+            <h3 class="text-xl font-bold text-green-400 font-mono">{item.data.component}</h3>
+            <span class="text-xs text-gray-600 font-mono">[ONLINE]</span>
+          </div>
+          
+          <div class="space-y-2 mb-4">
+            <div class="font-mono text-sm">
+              <span class="text-gray-500">MODEL:</span>
+              <span class="text-white ml-2">{item.data.model}</span>
+            </div>
+            <div class="font-mono text-sm">
+              <span class="text-gray-500">SPECS:</span>
+              <span class="text-white ml-2">{item.data.specs}</span>
+            </div>
+          </div>
+          
+          <div class="border-t border-green-500/20 pt-4">
+            <p class="text-sm text-gray-400">{item.data.purpose}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    font-family: 'Courier New', monospace;
+  }
+</style>

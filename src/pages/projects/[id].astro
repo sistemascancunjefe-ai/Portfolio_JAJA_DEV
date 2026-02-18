@@ -1,0 +1,126 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import SacDashboard from '../../components/mockups/SacDashboard';
+import ValidadorDashboard from '../../components/mockups/ValidadorDashboard';
+import RouteMap from '../../components/mockups/RouteMap';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const techDetails = await Promise.all(
+  (project.data.techStack || []).map(async (techRef) => {
+    const tech = await getCollection('tech');
+    return tech.find(t => t.id === techRef.id);
+  })
+);
+
+// Map project to mockup component
+const mockupComponents = {
+  'sac': SacDashboard,
+  'sac_v01': SacDashboard,
+  'validador': ValidadorDashboard,
+  'mueve_cancun': RouteMap,
+};
+
+const MockupComponent = mockupComponents[project.id as keyof typeof mockupComponents];
+---
+
+<Layout title={`${project.data.name} | JAJA.DEV`}>
+  <nav class="fixed top-0 w-full z-50 bg-[#050810]/80 backdrop-blur-lg border-b border-white/5 py-4 px-8">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <a href="/portfolio" class="text-xl font-black tracking-tighter hover:text-orange-500 transition-colors">
+        <span class="text-blue-500">JAJA</span><span class="text-orange-500">.DEV</span>
+      </a>
+      <div class="flex gap-8 font-mono text-xs uppercase tracking-widest">
+        <a href="/portfolio#proyectos" class="hover:text-orange-500 transition-colors">← Volver a Proyectos</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="relative pt-24 pb-16 px-8 bg-[#0a0e1a] min-h-screen">
+    <div class="max-w-6xl mx-auto">
+      {/* Header */}
+      <div class="mb-12">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <h1 class="text-5xl font-black mb-2 font-mono">
+              <span class="text-blue-500">{project.data.name}</span>
+            </h1>
+            <p class="text-2xl text-gray-400 font-mono">{project.data.subtitle}</p>
+          </div>
+          {project.data.inDevelopment && (
+            <span class="px-4 py-2 bg-orange-500/20 border border-orange-500 text-orange-400 font-mono text-sm">
+              EN DESARROLLO
+            </span>
+          )}
+        </div>
+        <p class="text-lg text-gray-300 leading-relaxed">{project.data.description}</p>
+      </div>
+
+      {/* Metrics */}
+      {project.data.metrics && project.data.metrics.length > 0 && (
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          {project.data.metrics.map((metric) => (
+            <div class="bg-black/40 border border-blue-500/30 p-6 hover:border-blue-500 transition-all">
+              <div class="text-sm text-gray-500 mb-2 font-mono uppercase">{metric.label}</div>
+              <div class="text-3xl font-bold text-blue-400 font-mono">{metric.value}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Interactive Mockup */}
+      {MockupComponent && (
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold mb-6 font-mono">
+            <span class="text-green-500">[</span> DEMO INTERACTIVO <span class="text-green-500">]</span>
+          </h2>
+          <MockupComponent client:load />
+        </div>
+      )}
+
+      {/* Tech Stack */}
+      {techDetails.length > 0 && (
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold mb-6 font-mono">
+            <span class="text-orange-500">$</span> STACK TECNOLÓGICO
+          </h2>
+          <div class="flex flex-wrap gap-3">
+            {techDetails.filter(Boolean).map((tech) => (
+              <div class="px-4 py-2 bg-gray-900/50 border border-gray-700 hover:border-orange-500 transition-all font-mono text-sm">
+                {tech!.data.name}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Link */}
+      {project.data.link && (
+        <div>
+          <a
+            href={project.data.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-mono transition-all"
+          >
+            Ver Proyecto →
+          </a>
+        </div>
+      )}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  main {
+    font-family: 'Courier New', monospace;
+  }
+</style>

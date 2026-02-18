@@ -22,9 +22,14 @@ const { title } = Astro.props;
 </html>
 
 <style is:global>
+  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+  
   :root {
     --primary-blue: #0066B3;
     --primary-orange: #FF6600;
+    --terminal-green: #00ff41;
+    --bg-dark: #0a0e1a;
+    --bg-darker: #050810;
   }
 
   html {
@@ -35,18 +40,34 @@ const { title } = Astro.props;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  /* Custom Scrollbar */
+  /* Monospace for specific elements */
+  .font-mono, pre, code {
+    font-family: 'Courier New', 'Courier Prime', monospace;
+  }
+
+  /* Custom Scrollbar - Terminal style */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
   }
   ::-webkit-scrollbar-track {
     background: #050810;
+    border-left: 1px solid #00ff41;
   }
   ::-webkit-scrollbar-thumb {
-    background: #131824;
-    border-radius: 10px;
+    background: #00ff41;
+    border-radius: 0;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #0066B3;
+  }
+
+  /* Terminal cursor animation */
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .animate-blink {
+    animation: blink 1s infinite;
   }
 </style>

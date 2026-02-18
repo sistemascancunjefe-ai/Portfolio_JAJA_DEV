@@ -3,6 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import ProjectGallery from '../components/ProjectGallery.astro';
 import MatrixBackground from '../components/MatrixBackground.astro';
+import TerminalProfile from '../components/TerminalProfile.astro';
+import Manifesto from '../components/Manifesto.astro';
+import HomeLab from '../components/HomeLab.astro';
 ---
 
 <Layout title="Julián Juárez | Portafolio Profesional">
@@ -13,7 +16,9 @@ import MatrixBackground from '../components/MatrixBackground.astro';
       </a>
       <div class="flex gap-8 font-mono text-xs uppercase tracking-widest">
         <a href="#proyectos" class="hover:text-orange-500 transition-colors">Proyectos</a>
-        <a href="#sobre-mi" class="hover:text-orange-500 transition-colors">Sobre Mí</a>
+        <a href="#terminal-profile" class="hover:text-orange-500 transition-colors">Perfil</a>
+        <a href="#manifesto" class="hover:text-orange-500 transition-colors">Manifesto</a>
+        <a href="#homelab" class="hover:text-orange-500 transition-colors">HomeLab</a>
         <a href="#contacto" class="hover:text-orange-500 transition-colors">Contacto</a>
       </div>
     </div>
@@ -23,16 +28,9 @@ import MatrixBackground from '../components/MatrixBackground.astro';
     <MatrixBackground />
     <Hero />
     <ProjectGallery />
-
-    <!-- More sections would go here -->
-    <section id="sobre-mi" class="py-24 px-8 bg-[#050810] border-t border-white/5">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-8">Filosofía de Trabajo</h2>
-            <blockquote class="text-2xl italic text-gray-400 leading-relaxed">
-                "Máquinas y sistemas al servicio de analistas, no analistas al servicio de máquinas"
-            </blockquote>
-        </div>
-    </section>
+    <TerminalProfile />
+    <Manifesto />
+    <HomeLab />
 
     <footer id="contacto" class="py-24 px-8 bg-[#0a0e1a] border-t border-white/5 text-center">
         <h2 class="text-3xl font-bold mb-4">¿Listo para innovar?</h2>
