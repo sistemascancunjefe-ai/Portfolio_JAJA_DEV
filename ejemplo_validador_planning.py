@@ -17,7 +17,7 @@ import os
 import pandas as pd
 import pyodbc
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Dict, List
 import logging
 
 # Configuración de logging
