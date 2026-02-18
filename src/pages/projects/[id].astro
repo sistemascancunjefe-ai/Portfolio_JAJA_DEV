@@ -14,12 +14,10 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const techDetails = await Promise.all(
-  (project.data.techStack || []).map(async (techRef) => {
-    const tech = await getCollection('tech');
-    return tech.find(t => t.id === techRef.id);
-  })
-);
+const techCollection = await getCollection('tech');
+const techDetails = (project.data.techStack || []).map((techRef) => {
+  return techCollection.find(t => t.id === techRef.id);
+});
 
 // Determine which mockup to show
 const showSacDashboard = project.id === 'sac' || project.id === 'sac_v01';
