@@ -1,0 +1,6 @@
+{
+  "component": "NAS",
+  "model": "Synology DS920+",
+  "specs": "32TB en RAID 6, SSD cache, 10GbE",
+  "purpose": "Backups automatizados, versionado de datos, file server"
+}

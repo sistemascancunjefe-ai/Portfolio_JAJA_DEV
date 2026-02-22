@@ -1,0 +1,18 @@
+{
+  "name": "Julián Juárez Alvarado",
+  "role": "Jefe de Sistemas & Automatización",
+  "email": "sistemascancunjefe@gmail.com.mx",
+  "linkedin": "https://www.linkedin.com/in/julianjuarezalvarado/",
+  "github": "https://github.com/JULIANJUAREZMX01",
+  "bio": "Ingeniero de sistemas especializado en automatización end-to-end de procesos logísticos. Experto en desarrollo de soluciones que generan ROI medible, eliminando intervención manual y optimizando operaciones a escala empresarial.",
+  "skills": [
+    "Python/FastAPI",
+    "React/TypeScript",
+    "PostgreSQL/DB2",
+    "Automatización de Procesos",
+    "Arquitectura de Sistemas",
+    "DevOps & CI/CD",
+    "Análisis de ROI",
+    "Gestión de Infraestructura"
+  ]
+}

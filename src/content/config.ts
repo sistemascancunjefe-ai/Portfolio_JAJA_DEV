@@ -33,8 +33,43 @@ const categories = defineCollection({
   }),
 });
 
+const philosophy = defineCollection({
+  type: 'data',
+  schema: z.object({
+    title: z.string(),
+    content: z.string(),
+    principles: z.array(z.string()).optional(),
+  }),
+});
+
+const profile = defineCollection({
+  type: 'data',
+  schema: z.object({
+    name: z.string(),
+    role: z.string(),
+    email: z.string(),
+    linkedin: z.string().optional(),
+    github: z.string().optional(),
+    bio: z.string(),
+    skills: z.array(z.string()).optional(),
+  }),
+});
+
+const homelab = defineCollection({
+  type: 'data',
+  schema: z.object({
+    component: z.string(),
+    model: z.string(),
+    specs: z.string(),
+    purpose: z.string(),
+  }),
+});
+
 export const collections = {
   projects,
   tech,
   categories,
+  philosophy,
+  profile,
+  homelab,
 };
