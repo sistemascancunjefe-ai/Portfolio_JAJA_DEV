@@ -24,6 +24,7 @@ export function transformNexusData(
   tech: CollectionEntry<'tech'>[],
   categories: CollectionEntry<'categories'>[]
 ) {
+  const techById = new Map(tech.map(t => [t.id, t]));
   const nodes: NexusNode[] = [];
   const links: NexusLink[] = [];
 
@@ -93,17 +94,19 @@ export function transformNexusData(
       description: p.data.description,
       category: 'project',
       metrics: p.data.metrics,
-      techStack: p.data.techStack?.map(ref => ref.id),
+      techStack: (p.data.techStack || []).map(ref => {
+        const techId = typeof ref === 'string' ? ref : ref.id;
+        return techById.get(techId)?.data.name || techId;
+      }),
       inDevelopment: p.data.inDevelopment, link: p.data.link,
       mass: mass,
     });
 
     // Connect project to its category
     // Robust handling for missing categories
-    let categoryId = 'uncategorized';
-    if (p.data.category && p.data.category.id) {
-        categoryId = p.data.category.id;
-    }
+    const categoryId = typeof p.data.category === 'string'
+      ? p.data.category
+      : p.data.category?.id || 'uncategorized';
 
     const categoryNodeId = `cat_${categoryId}`;
 
@@ -122,8 +125,9 @@ export function transformNexusData(
     links.push({ source: categoryNodeId, target: `project_${p.id}`, value: 2 });
 
     // Connect project to its technologies
-    p.data.techStack?.forEach(tRef => {
-      links.push({ source: `project_${p.id}`, target: `tech_${tRef.id}`, value: 1.5 });
+    (p.data.techStack || []).forEach(tRef => {
+      const techId = typeof tRef === 'string' ? tRef : tRef.id;
+      links.push({ source: `project_${p.id}`, target: `tech_${techId}`, value: 1.5 });
     });
   });
 
