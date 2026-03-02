@@ -76,9 +76,9 @@ const showRouteMap = project.id === 'mueve_cancun';
           <h2 class="text-2xl font-bold mb-6 font-mono">
             <span class="text-green-500">[</span> DEMO INTERACTIVO <span class="text-green-500">]</span>
           </h2>
-          {showSacDashboard && <SacDashboard client:load />}
-          {showValidadorDashboard && <ValidadorDashboard client:load />}
-          {showRouteMap && <RouteMap client:load />}
+          {showSacDashboard && <SacDashboard client:visible />}
+          {showValidadorDashboard && <ValidadorDashboard client:visible />}
+          {showRouteMap && <RouteMap client:visible />}
         </div>
       )}
 
