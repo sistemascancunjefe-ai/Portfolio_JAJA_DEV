@@ -71,7 +71,7 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
     feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
     const sim = d3.forceSimulation(initialNodes as any)
-      .force('link', d3.forceLink(initialLinks).id((d: any) => d.id).distance(d => 150 - (d.source.mass / 10)))
+      .force('link', d3.forceLink(initialLinks).id((d: any) => d.id).distance(d => 150 - ((d.source as any).mass / 10)))
       .force('charge', d3.forceManyBody().strength((d: any) => -500 * (d.mass / 100)))
       .force('center', d3.forceCenter(width / 2, height / 2))
       .force('collision', d3.forceCollide().radius((d: any) => d.mass / 2 + 20))

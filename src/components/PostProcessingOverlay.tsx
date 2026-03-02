@@ -21,14 +21,14 @@ const PostProcessingOverlay: React.FC<Props> = ({ isDeepDive, isLowPerformance }
         gl={{ antialias: false, stencil: false, depth: false }}
         style={{ pointerEvents: 'none' }}
       >
-        <EffectComposer disableNormalPass>
+        <EffectComposer>
           <ChromaticAberration
             blendFunction={BlendFunction.NORMAL}
             offset={CHROMATIC_ABERRATION_OFFSET}
           />
-          {!isLowPerformance && (
+          {!isLowPerformance ? (
             <Noise opacity={0.15} blendFunction={BlendFunction.SOFT_LIGHT} />
-          )}
+          ) : <></>}
           <Vignette eskil={false} offset={0.05} darkness={1.3} />
         </EffectComposer>
       </Canvas>
