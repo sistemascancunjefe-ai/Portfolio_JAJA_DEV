@@ -141,13 +141,18 @@ export function transformNexusData(
     'Data Vortex', 'Nexus Core v2', 'Shadow Protocol', 'Edge Intelligence'
   ];
 
+  let projectIdx = 0;
+  let nameIdx = 0;
+  const projectLen = projects.length;
+  const nameLen = ghostNames.length;
+
   for (let i = 0; i < ghostCount; i++) {
-    const targetProject = projects[i % projects.length];
+    const targetProject = projects[projectIdx];
     const ghostId = `ghost_${i}`;
 
     nodes.push({
       id: ghostId,
-      name: ghostNames[i % ghostNames.length] || `Lab Project ${i}`,
+      name: ghostNames[nameIdx] || `Lab Project ${i}`,
       subtitle: 'CLASSIFIED',
       category: 'ghost',
       description: 'Under development in our clandestine innovation lab. Access restricted.',
@@ -163,6 +168,11 @@ export function transformNexusData(
             value: 1
         });
     }
+
+    projectIdx++;
+    if (projectIdx === projectLen) projectIdx = 0;
+    nameIdx++;
+    if (nameIdx === nameLen) nameIdx = 0;
   }
 
   return { nodes, links };
