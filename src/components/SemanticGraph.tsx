@@ -19,7 +19,6 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [simulation, setSimulation] = useState<d3.Simulation<any, undefined> | null>(null);
   const [corePos, setCorePos] = useState({ x: 0, y: 0 });
-  const [isBreaching, setIsBreaching] = useState(false);
 
   // Performance logic
   const [isLowPerformance, setIsLowPerformance] = useState(false);
@@ -213,10 +212,7 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
   };
 
   const handleSystemBreach = () => {
-    setIsBreaching(true);
-    setTimeout(() => {
-        window.location.href = '/portfolio';
-    }, 1500);
+    window.location.href = '/portfolio';
   };
 
   return (
@@ -376,16 +372,6 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {isBreaching && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.1, filter: "blur(20px)" }}
-            animate={{ opacity: 1, scale: 50, filter: "blur(0px)" }}
-            transition={{ duration: 1.5, ease: "circIn" }}
-            className="absolute inset-0 z-[100] bg-white pointer-events-none"
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 };
