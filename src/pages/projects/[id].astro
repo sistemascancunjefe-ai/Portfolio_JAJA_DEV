@@ -15,9 +15,10 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const techCollection = await getCollection('tech');
+const techMap = new Map(techCollection.map(t => [t.id, t]));
 const techDetails = (project.data.techStack || []).map((techRef) => {
   const techId = typeof techRef === 'string' ? techRef : techRef.id;
-  return techCollection.find(t => t.id === techId);
+  return techMap.get(techId);
 });
 
 // Determine which mockup to show
