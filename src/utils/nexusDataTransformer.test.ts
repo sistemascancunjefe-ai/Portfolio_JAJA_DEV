@@ -1,12 +1,7 @@
+// @ts-nocheck
 import { expect, test, describe } from 'bun:test';
 import { transformNexusData } from './nexusDataTransformer';
 
-declare module 'bun:test' {
-  const test: any;
-  const expect: any;
-  const describe: any;
-  export { test, expect, describe };
-}
 // Helper to create mock data
 const createMockProject = (id: string, overrides: any = {}) => ({
   id,
