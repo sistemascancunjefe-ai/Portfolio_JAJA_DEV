@@ -145,8 +145,6 @@ describe('nexusDataTransformer', () => {
 
     test('should handle project with null category id', () => {
        const projects: any[] = [createMockProject('p_null_cat', { category: { id: null } })];
-       // Code: if (p.data.category && p.data.category.id) -> checks truthiness.
-       // So null id -> uncategorized.
        const { nodes } = transformNexusData(projects, [], []);
        expect(nodes.find(n => n.id === 'cat_uncategorized')).toBeDefined();
     });
