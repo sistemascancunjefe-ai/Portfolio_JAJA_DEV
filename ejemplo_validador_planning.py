@@ -220,12 +220,15 @@ class ValidadorPlanning:
         if not alertas:
             return '✅ OK'
         
-        criticas = sum(1 for a in alertas if a['nivel'] == 'CRÍTICA')
-        medias = sum(1 for a in alertas if a['nivel'] == 'MEDIA')
-        
-        if criticas > 0:
-            return '🔴 CRÍTICO'
-        elif medias > 3:
+        medias = 0
+        for a in alertas:
+            nivel = a.get('nivel')
+            if nivel == 'CRÍTICA':
+                return '🔴 CRÍTICO'
+            if nivel == 'MEDIA':
+                medias += 1
+
+        if medias > 3:
             return '🟡 REVISAR'
         else:
             return '🟢 ACEPTABLE'
