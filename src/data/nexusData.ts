@@ -102,7 +102,7 @@ const realNodes: NexusNode[] = [
   { id: 'git', name: 'Git/GitHub', category: 'tech' },
 ];
 
-const generateGhostNodes = (realCount: number): NexusNode[] => {
+export const generateGhostNodes = (realCount: number): NexusNode[] => {
   const ghostCount = Math.floor(realCount * 0.5);
   const ghostNodes: NexusNode[] = [];
   const names = [
