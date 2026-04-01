@@ -150,5 +150,19 @@ describe('nexusDataTransformer', () => {
        const { nodes } = transformNexusData(projects, [], []);
        expect(nodes.find(n => n.id === 'cat_uncategorized')).toBeDefined();
     });
+
+    test('should NOT create "cat_tech" node if no technologies are provided', () => {
+      const { nodes } = transformNexusData([], [], []);
+      const techCatNode = nodes.find(n => n.id === 'cat_tech');
+      expect(techCatNode).toBeUndefined();
+    });
+
+    test('should handle null or undefined inputs gracefully', () => {
+      // @ts-ignore - testing runtime resilience
+      const { nodes } = transformNexusData(null, null, null);
+      const coreNode = nodes.find(n => n.id === 'jaja_dev');
+      expect(coreNode).toBeDefined();
+      expect(nodes.length).toBe(1); // Only core node
+    });
   });
 });

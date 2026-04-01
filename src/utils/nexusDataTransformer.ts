@@ -20,11 +20,16 @@ export interface NexusLink {
 }
 
 export function transformNexusData(
-  projects: CollectionEntry<'projects'>[],
-  tech: CollectionEntry<'tech'>[],
-  categories: CollectionEntry<'categories'>[]
+  projects: CollectionEntry<'projects'>[] = [],
+  tech: CollectionEntry<'tech'>[] = [],
+  categories: CollectionEntry<'categories'>[] = []
 ) {
-  const techById = new Map(tech.map(t => [t.id, t]));
+  // Defensive handling for null/undefined
+  const safeProjects = projects || [];
+  const safeTech = tech || [];
+  const safeCategories = categories || [];
+
+  const techById = new Map(safeTech.map(t => [t.id, t]));
   const nodes: NexusNode[] = [];
   const links: NexusLink[] = [];
 
@@ -42,7 +47,7 @@ export function transformNexusData(
   });
 
   // 2. Categories
-  categories.forEach(cat => {
+  safeCategories.forEach(cat => {
     const nodeId = `cat_${cat.id}`;
     nodes.push({
       id: nodeId,
@@ -57,7 +62,8 @@ export function transformNexusData(
 
   // Ensure 'cat_tech' exists for technologies if not already present
   // This prevents orphaned tech nodes if 'tech' category is missing from input
-  if (!createdCategoryIds.has('cat_tech')) {
+  // Trigger only if there are actually technologies to show
+  if (!createdCategoryIds.has('cat_tech') && safeTech.length > 0) {
       nodes.push({
           id: 'cat_tech',
           name: 'Technologies',
@@ -69,7 +75,7 @@ export function transformNexusData(
   }
 
   // 3. Technologies
-  tech.forEach(t => {
+  safeTech.forEach(t => {
     nodes.push({
       id: `tech_${t.id}`,
       name: t.data.name,
@@ -81,7 +87,7 @@ export function transformNexusData(
   });
 
   // 4. Projects
-  projects.forEach(p => {
+  safeProjects.forEach(p => {
     // Calculate mass based on metrics
     const baseMass = 60;
     const metricsWeight = p.data.metrics?.reduce((acc, m) => acc + (m.weight || 0), 0) || 0;
@@ -134,7 +140,7 @@ export function transformNexusData(
   // 5. Ghost Nodes (1.5x Expansion Rule)
   // n real projects -> 0.5n ghost nodes
   // Used Math.ceil to ensure at least one ghost node exists if there are projects
-  const ghostCount = projects.length > 0 ? Math.ceil(projects.length * 0.5) : 0;
+  const ghostCount = safeProjects.length > 0 ? Math.ceil(safeProjects.length * 0.5) : 0;
 
   const ghostNames = [
     'Project X-RAY', 'Neural Engine', 'Quantum Bridge', 'Cyber Sentinel',
@@ -142,7 +148,7 @@ export function transformNexusData(
   ];
 
   for (let i = 0; i < ghostCount; i++) {
-    const targetProject = projects[i % projects.length];
+    const targetProject = safeProjects[i % safeProjects.length];
     const ghostId = `ghost_${i}`;
 
     nodes.push({
