@@ -32,7 +32,21 @@
     }
   }
 
-  let interval = setInterval(draw, 50);
+  let lastTime = 0;
+  const frameInterval = 50; // ms per frame (approx 20 FPS)
+
+  function animate(currentTime: number) {
+    const deltaTime = currentTime - lastTime;
+
+    if (deltaTime >= frameInterval) {
+      draw();
+      lastTime = currentTime - (deltaTime % frameInterval);
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
 
   window.addEventListener('resize', () => {
     width = canvas.width = window.innerWidth;
