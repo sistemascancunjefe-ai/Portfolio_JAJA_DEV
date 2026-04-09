@@ -33,8 +33,8 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
       const now = performance.now();
       frameCount++;
       if (now - lastTime >= 1000) {
-        if (frameCount < 45) setIsLowPerformance(true);
-        else setIsLowPerformance(false);
+        const isLow = frameCount < 45;
+        setIsLowPerformance(prev => prev !== isLow ? isLow : prev);
         frameCount = 0;
         lastTime = now;
       }
