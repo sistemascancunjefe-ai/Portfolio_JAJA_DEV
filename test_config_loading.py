@@ -29,12 +29,9 @@ class TestConfigLoading(unittest.TestCase):
 
     @patch.dict(os.environ, {}, clear=True)
     def test_config_defaults(self):
-        config = get_db_config()
-        self.assertEqual(config['host'], 'your_host_here')
-        self.assertEqual(config['port'], '50000')
-        self.assertEqual(config['database'], 'your_database_here')
-        self.assertEqual(config['user'], 'your_user_here')
-        self.assertEqual(config['password'], 'your_password_here')
+        with self.assertRaises(ValueError) as cm:
+            get_db_config()
+        self.assertIn("Error de seguridad: Faltan variables de entorno críticas", str(cm.exception))
 
 if __name__ == '__main__':
     unittest.main()

@@ -339,17 +339,31 @@ class ValidadorPlanning:
 def get_db_config() -> Dict[str, str]:
     """
     Obtiene la configuración de la base de datos desde variables de entorno.
+    Implementa un enfoque de fallo rápido si faltan variables requeridas.
 
     Returns:
         Dict con credenciales de base de datos
+
+    Raises:
+        ValueError: Si alguna variable de entorno requerida no está configurada.
     """
-    return {
-        'host': os.getenv('DB_HOST', 'your_host_here'),
-        'port': os.getenv('DB_PORT', '50000'),
-        'database': os.getenv('DB_DATABASE', 'your_database_here'),
-        'user': os.getenv('DB_USER', 'your_user_here'),
-        'password': os.getenv('DB_PASSWORD', 'your_password_here')
+    config = {
+        'host': os.getenv('DB_HOST'),
+        'port': os.getenv('DB_PORT'),
+        'database': os.getenv('DB_DATABASE'),
+        'user': os.getenv('DB_USER'),
+        'password': os.getenv('DB_PASSWORD')
     }
+
+    # Verificar que todas las variables estén presentes
+    missing = [k for k, v in config.items() if v is None]
+    if missing:
+        raise ValueError(
+            f"❌ Error de seguridad: Faltan variables de entorno críticas: {', '.join(missing)}. "
+            "Asegúrese de configurar DB_HOST, DB_PORT, DB_DATABASE, DB_USER y DB_PASSWORD."
+        )
+
+    return config
 
 
 def ejemplo_uso():
