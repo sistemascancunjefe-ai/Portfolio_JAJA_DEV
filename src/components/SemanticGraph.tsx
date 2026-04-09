@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { NexusNode, NexusLink } from '../utils/nexusDataTransformer';
+import type { NexusNode, NexusLink } from '../types/nexus';
 import PostProcessingOverlay from './PostProcessingOverlay';
 import { Canvas } from '@react-three/fiber';
 import NucleusCore from './NucleusCore';

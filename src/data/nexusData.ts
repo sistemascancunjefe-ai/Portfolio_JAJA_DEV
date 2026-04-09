@@ -1,20 +1,4 @@
-export interface NexusNode {
-  id: string;
-  name: string;
-  subtitle?: string;
-  category: 'core' | 'project' | 'tech' | 'category' | 'ghost';
-  description?: string;
-  metrics?: { label: string; value: string }[];
-  techStack?: string[];
-  link?: string;
-  inDevelopment?: boolean;
-}
-
-export interface NexusLink {
-  source: string;
-  target: string;
-  value: number;
-}
+import type { NexusNode, NexusLink } from '../types/nexus';
 
 const realNodes: NexusNode[] = [
   {
