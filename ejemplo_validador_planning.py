@@ -342,14 +342,29 @@ def get_db_config() -> Dict[str, str]:
 
     Returns:
         Dict con credenciales de base de datos
+
+    Raises:
+        ValueError: Si faltan variables de entorno requeridas.
     """
-    return {
-        'host': os.getenv('DB_HOST', 'your_host_here'),
+    config = {
+        'host': os.getenv('DB_HOST'),
         'port': os.getenv('DB_PORT', '50000'),
-        'database': os.getenv('DB_DATABASE', 'your_database_here'),
-        'user': os.getenv('DB_USER', 'your_user_here'),
-        'password': os.getenv('DB_PASSWORD', 'your_password_here')
+        'database': os.getenv('DB_DATABASE'),
+        'user': os.getenv('DB_USER'),
+        'password': os.getenv('DB_PASSWORD')
     }
+
+    # Validar variables requeridas
+    required_vars = ['host', 'database', 'user', 'password']
+    missing_vars = [var for var in required_vars if not config[var]]
+
+    if missing_vars:
+        raise ValueError(
+            f"❌ Faltan variables de entorno requeridas: {', '.join(missing_vars)}. "
+            "Asegúrese de configurar el archivo .env basado en .env.example"
+        )
+
+    return config
 
 
 def ejemplo_uso():
