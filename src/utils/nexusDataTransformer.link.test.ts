@@ -1,6 +1,6 @@
-// @ts-nocheck
 import { describe, expect, test } from 'bun:test';
 import { transformNexusData } from './nexusDataTransformer';
+import type { CollectionEntry } from 'astro:content';
 
 describe('nexusDataTransformer - Link Mapping', () => {
   test('should map link field from project data', () => {
@@ -19,16 +19,16 @@ describe('nexusDataTransformer - Link Mapping', () => {
         techStack: [],
         inDevelopment: false
       }
-    }] as any;
+    }] as unknown as CollectionEntry<'projects'>[];
 
-    const tech = [] as any;
+    const tech = [] as unknown as CollectionEntry<'tech'>[];
     const categories = [{
       id: 'projects',
       slug: 'projects',
       body: '',
       collection: 'categories',
       data: { name: 'Projects' }
-    }] as any;
+    }] as unknown as CollectionEntry<'categories'>[];
 
     const { nodes } = transformNexusData(projects, tech, categories);
     const projectNode = nodes.find(n => n.id === 'project_test_project');
