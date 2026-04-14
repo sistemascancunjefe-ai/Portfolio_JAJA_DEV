@@ -1,13 +1,13 @@
 const numNodes = 10000;
 const iterations = 1000;
 
-interface Node {
+interface BenchmarkNode {
     id: string;
     fx: number | null;
     fy: number | null;
 }
 
-const nodes: Node[] = Array.from({ length: numNodes }, (_, i) => ({
+const nodes: BenchmarkNode[] = Array.from({ length: numNodes }, (_, i) => ({
     id: `node_${i}`,
     fx: 100,
     fy: 100,

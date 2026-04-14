@@ -16,7 +16,7 @@
     "@react-three/fiber": "^9.5.0",
     "@react-three/postprocessing": "^3.0.4",
     "@types/three": "^0.182.0",
-    "astro": "^5.17.1",
+    "astro": "^5.18.0",
     "d3": "^7.9.0",
     "framer-motion": "^12.31.0",
     "postprocessing": "^6.38.2",
