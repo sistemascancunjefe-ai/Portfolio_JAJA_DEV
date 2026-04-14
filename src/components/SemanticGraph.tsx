@@ -192,22 +192,18 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
 
     if (simulation) {
         simulation.alphaTarget(0.3).restart();
-        initialNodes.forEach((n: any) => {
-            if (n.id === node.id) {
-                n.fx = window.innerWidth / 2;
-                n.fy = window.innerHeight / 2;
-            }
-        });
+        (node as any).fx = window.innerWidth / 2;
+        (node as any).fy = window.innerHeight / 2;
     }
   };
 
   const closeDeepDive = () => {
     setIsExpanded(false);
     if (simulation) {
-        initialNodes.forEach((n: any) => {
-            n.fx = null;
-            n.fy = null;
-        });
+        if (selectedNode) {
+            (selectedNode as any).fx = null;
+            (selectedNode as any).fy = null;
+        }
         simulation.alphaTarget(0);
     }
   };
