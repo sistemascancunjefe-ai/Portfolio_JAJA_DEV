@@ -1,8 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
+import { getEntry } from 'astro:content';
 
-const philosophy = await getCollection('philosophy');
-const manifesto = philosophy.find(p => p.id === 'manifesto');
+const manifesto = await getEntry('philosophy', 'manifesto');
 ---
 
 <section id="manifesto" class="py-24 px-8 bg-[#0a0e1a] border-t border-white/5">
