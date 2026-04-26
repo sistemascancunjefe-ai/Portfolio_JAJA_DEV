@@ -1,4 +1,5 @@
 // @ts-nocheck
+// @ts-ignore
 import { expect, test, describe } from 'bun:test';
 import { nexusNodes, nexusLinks } from './nexusData';
 
