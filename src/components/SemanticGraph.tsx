@@ -6,6 +6,10 @@ import PostProcessingOverlay from './PostProcessingOverlay';
 import { Canvas } from '@react-three/fiber';
 import NucleusCore from './NucleusCore';
 
+interface GraphNode extends NexusNode, d3.SimulationNodeDatum {}
+interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {
+  value: number;
+}
 interface Props {
   initialNodes: NexusNode[];
   initialLinks: NexusLink[];
@@ -17,7 +21,7 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
   const [selectedNode, setSelectedNode] = useState<NexusNode | null>(null);
   const [hoveredNode, setHoveredNode] = useState<NexusNode | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [simulation, setSimulation] = useState<d3.Simulation<any, undefined> | null>(null);
+  const [simulation, setSimulation] = useState<d3.Simulation<GraphNode, GraphLink> | null>(null);
   const [corePos, setCorePos] = useState({ x: 0, y: 0 });
   const [isBreaching, setIsBreaching] = useState(false);
 
@@ -70,13 +74,13 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
     feMerge.append('feMergeNode').attr('in', 'coloredBlur');
     feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
-    const sim = d3.forceSimulation(initialNodes as any)
-      .force('link', d3.forceLink(initialLinks).id((d: any) => d.id).distance(d => 150 - ((d.source as any).mass / 10)))
-      .force('charge', d3.forceManyBody().strength((d: any) => -500 * (d.mass / 100)))
+    const sim = d3.forceSimulation<GraphNode>(initialNodes as GraphNode[])
+      .force('link', d3.forceLink<GraphNode, GraphLink>(initialLinks as GraphLink[]).id(d => d.id).distance(d => 150 - (((d.source as GraphNode).mass || 0) / 10)))
+      .force('charge', d3.forceManyBody<GraphNode>().strength(d => -500 * ((d.mass || 0) / 100)))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius((d: any) => d.mass / 2 + 20))
-      .force('x', d3.forceX(width / 2).strength(0.02))
-      .force('y', d3.forceY(height / 2).strength(0.02));
+      .force('collision', d3.forceCollide<GraphNode>().radius(d => (d.mass || 0) / 2 + 20))
+      .force('x', d3.forceX<GraphNode>(width / 2).strength(0.02))
+      .force('y', d3.forceY<GraphNode>(height / 2).strength(0.02));
 
     setSimulation(sim);
 
@@ -84,16 +88,16 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
       .attr('stroke', '#4facfe')
       .attr('stroke-opacity', 0.15)
       .selectAll('line')
-      .data(initialLinks)
+      .data(initialLinks as GraphLink[])
       .join('line')
-      .attr('stroke-dasharray', (d: any) => d.target.category === 'ghost' ? '5,5' : 'none')
+      .attr('stroke-dasharray', d => (d.target as GraphNode).category === 'ghost' ? '5,5' : 'none')
       .attr('stroke-width', d => Math.sqrt(d.value) * 1.5);
 
-    let hoverTimer: any;
+    let hoverTimer: ReturnType<typeof setTimeout> | null = null;
 
     const node = svg.append('g')
-      .selectAll('g')
-      .data(initialNodes)
+      .selectAll<SVGGElement, GraphNode>('g')
+      .data(initialNodes as GraphNode[])
       .join('g')
       .attr('cursor', 'pointer')
       .on('mouseenter', (event, d) => {
@@ -125,7 +129,7 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
         event.stopPropagation();
         handleDeepDive(d);
       })
-      .call(d3.drag<any, any>()
+      .call(d3.drag<SVGGElement, GraphNode>()
         .on('start', dragstarted)
         .on('drag', dragged)
         .on('end', dragended));
@@ -151,31 +155,31 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
 
     sim.on('tick', () => {
       link
-        .attr('x1', (d: any) => d.source.x)
-        .attr('y1', (d: any) => d.source.y)
-        .attr('x2', (d: any) => d.target.x)
-        .attr('y2', (d: any) => d.target.y);
+        .attr('x1', d => (d.source as GraphNode).x!)
+        .attr('y1', d => (d.source as GraphNode).y!)
+        .attr('x2', d => (d.target as GraphNode).x!)
+        .attr('y2', d => (d.target as GraphNode).y!);
 
-      node.attr('transform', (d: any) => {
+      node.attr('transform', d => {
         if (d.id === 'jaja_dev') {
-            setCorePos({ x: d.x, y: d.y });
+            setCorePos({ x: d.x!, y: d.y! });
         }
         return `translate(${d.x},${d.y})`;
       });
     });
 
-    function dragstarted(event: any) {
+    function dragstarted(event: d3.D3DragEvent<SVGGElement, GraphNode, GraphNode>) {
       if (!event.active) sim.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
     }
 
-    function dragged(event: any) {
+    function dragged(event: d3.D3DragEvent<SVGGElement, GraphNode, GraphNode>) {
       event.subject.fx = event.x;
       event.subject.fy = event.y;
     }
 
-    function dragended(event: any) {
+    function dragended(event: d3.D3DragEvent<SVGGElement, GraphNode, GraphNode>) {
       if (!event.active) sim.alphaTarget(0);
       event.subject.fx = null;
       event.subject.fy = null;
@@ -192,8 +196,9 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
 
     if (simulation) {
         simulation.alphaTarget(0.3).restart();
-        (node as any).fx = window.innerWidth / 2;
-        (node as any).fy = window.innerHeight / 2;
+        const graphNode = node as GraphNode;
+        graphNode.fx = window.innerWidth / 2;
+        graphNode.fy = window.innerHeight / 2;
     }
   };
 
@@ -201,8 +206,9 @@ const SemanticGraph: React.FC<Props> = ({ initialNodes, initialLinks }) => {
     setIsExpanded(false);
     if (simulation) {
         if (selectedNode) {
-            (selectedNode as any).fx = null;
-            (selectedNode as any).fy = null;
+            const graphNode = selectedNode as GraphNode;
+            graphNode.fx = null;
+            graphNode.fy = null;
         }
         simulation.alphaTarget(0);
     }
