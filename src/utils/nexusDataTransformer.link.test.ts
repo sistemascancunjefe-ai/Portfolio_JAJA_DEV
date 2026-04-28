@@ -1,3 +1,4 @@
+// @ts-ignore
 import { describe, expect, test } from 'bun:test';
 import { transformNexusData } from './nexusDataTransformer';
 import type { CollectionEntry } from 'astro:content';
