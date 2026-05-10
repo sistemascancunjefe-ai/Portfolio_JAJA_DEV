@@ -83,7 +83,7 @@ class ValidadorPlanning:
         Returns:
             Dict con resultados de validación y alertas
         """
-        query_oc = f"""
+        query_oc = """
         SELECT 
             AHTLOC AS ALMACEN,
             AHPON AS OC,
@@ -92,27 +92,27 @@ class ValidadorPlanning:
             AHACTO AS CANTIDAD_OC,
             AHASTP AS STATUS_ASN
         FROM WM260BASD.AHASNF00
-        WHERE AHPON = '{orden_compra}'
+        WHERE AHPON = ?
           AND AHTLOC = '427'
           AND AHASTP = '1'
         """
         
-        query_distros = f"""
+        query_distros = """
         SELECT 
             DSTLOC AS ALMACEN,
             DSPON AS OC,
             DSITMN AS SKU,
             SUM(DSDQTY) AS CANTIDAD_DISTRO
         FROM WM260BASD.DSTRBF00
-        WHERE DSPON = '{orden_compra}'
+        WHERE DSPON = ?
           AND DSTLOC = '427'
         GROUP BY DSTLOC, DSPON, DSITMN
         """
         
         try:
             # Ejecutar queries
-            df_oc = pd.read_sql(query_oc, self.connection)
-            df_distros = pd.read_sql(query_distros, self.connection)
+            df_oc = pd.read_sql(query_oc, self.connection, params=[orden_compra])
+            df_distros = pd.read_sql(query_distros, self.connection, params=[orden_compra])
             
             # Merge y comparación
             df_merged = pd.merge(
