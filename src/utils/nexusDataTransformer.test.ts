@@ -4,13 +4,13 @@ import { transformNexusData } from './nexusDataTransformer';
 import type { CollectionEntry } from 'astro:content';
 
 // Helper to create mock data
-const createMockProject = (id: string, overrides: any = {}) => ({
+const createMockProject = (id: string, overrides: Partial<CollectionEntry<'projects'>['data']> = {}) => ({
   id,
   data: {
     name: `Project ${id}`,
     subtitle: 'Subtitle',
     description: 'Description',
-    category: { id: 'web' },
+    category: { id: 'web' } as any,
     metrics: [],
     techStack: [],
     inDevelopment: false,
@@ -18,15 +18,16 @@ const createMockProject = (id: string, overrides: any = {}) => ({
   }
 }) as unknown as CollectionEntry<'projects'>;
 
-const createMockTech = (id: string, overrides: any = {}) => ({
+const createMockTech = (id: string, overrides: Partial<CollectionEntry<'tech'>['data']> = {}) => ({
   id,
   data: {
     name: `Tech ${id}`,
+    category: 'general',
     ...overrides
   }
 }) as unknown as CollectionEntry<'tech'>;
 
-const createMockCategory = (id: string, overrides: any = {}) => ({
+const createMockCategory = (id: string, overrides: Partial<CollectionEntry<'categories'>['data']> = {}) => ({
   id,
   data: {
     name: `Category ${id}`,
