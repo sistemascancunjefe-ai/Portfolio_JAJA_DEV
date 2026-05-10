@@ -407,15 +407,15 @@ def ejemplo_uso():
     print("RESUMEN DE VALIDACIÓN")
     print("=" * 70)
     
-    total_alertas_criticas = sum(
-        sum(1 for a in r.get('alertas', []) if a['nivel'] == 'CRÍTICA')
-        for r in resultados
-    )
-    
-    total_alertas_medias = sum(
-        sum(1 for a in r.get('alertas', []) if a['nivel'] == 'MEDIA')
-        for r in resultados
-    )
+    total_alertas_criticas = 0
+    total_alertas_medias = 0
+    for r in resultados:
+        for a in r.get('alertas', []):
+            nivel = a.get('nivel')
+            if nivel == 'CRÍTICA':
+                total_alertas_criticas += 1
+            elif nivel == 'MEDIA':
+                total_alertas_medias += 1
     
     print(f"\n📊 OCs Procesadas: {len(resultados)}")
     print(f"🔴 Alertas Críticas: {total_alertas_criticas}")
